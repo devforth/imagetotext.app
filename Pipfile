@@ -8,6 +8,8 @@ fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 pillow = "*"
 tesserocr = "*"
+jinja2 = "*"
+aiofiles = "*"
 
 [dev-packages]
 
