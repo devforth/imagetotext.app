@@ -6,6 +6,8 @@ from fastapi.templating import Jinja2Templates
 import base64
 import io
 
+import locale
+locale.setlocale(locale.LC_ALL, 'C')
 from PIL import Image
 Image.MAX_IMAGE_PIXELS=1000000000
 from tesserocr import PyTessBaseAPI, RIL, iterate_level
@@ -68,7 +70,7 @@ def upload(request: ImageModel):
                 "height": bbox[3],
             }
             
-            
+
             text_list.append(im)
             i += 1
         print('text_list', text_list)
