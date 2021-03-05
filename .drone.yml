@@ -1,0 +1,35 @@
+kind: pipeline
+name: default
+type: docker
+concurrency:
+  limit: 1
+
+steps:
+- name: slack-begin
+  image: plugins/slack
+  settings:
+    webhook:
+      from_secret: slack_webhook
+    username: Drone
+    template: >
+      {{repo.name}}/{{build.branch}} - Started #{{build.number}} "${DRONE_COMMIT_MESSAGE}" by {{build.author}} (<{{build.link}}|Open>)
+
+- name: build
+  environment:
+    VAULT_MASTER_SSH_PRIV_KEY:
+      from_secret: VAULT_MASTER_SSH_PRIV_KEY
+    VAULT_MASTER_SSH_PUB_KEY:
+      from_secret: VAULT_MASTER_SSH_PUB_KEY
+      
+  image: devforth/drone-builder
+  commands:
+  - cd deploy && /bin/bash build.sh
+
+- name: slack-end
+  image: plugins/slack
+  settings:
+    webhook:
+      from_secret: slack_webhook
+    username: Drone
+    template: >
+      {{repo.name}}/{{build.branch}} - #{{build.number}} {{uppercasefirst build.status}} after {{since build.started}} (<{{build.link}}|Open>)
