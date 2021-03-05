@@ -32,14 +32,6 @@ class ImageModalResp(BaseModel):
 def read_root(request: Request):
     return templates.TemplateResponse("main.html", {"request": request})
 
-def transformCorInWidthInHeight(img):
-    width = img.width - img.left
-    height = img.height - img.top
-    return {
-        width: width,
-        height: height,
-    }
-
 @app.post('/upload/')
 def upload(request: ImageModel): 
     msg = base64.b64decode(request.base64)
@@ -66,8 +58,8 @@ def upload(request: ImageModel):
                 "text": symbol,
                 "left": bbox[0],
                 "top": bbox[1],
-                "width": bbox[2],
-                "height": bbox[3],
+                "width": bbox[2] - bbox[0],
+                "height": bbox[3] - bbox[1],
             }
             
 
