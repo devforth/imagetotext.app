@@ -38,8 +38,6 @@ def transformCorInWidthInHeight(img):
         height: height,
     }
 
-
-
 @app.post('/upload/')
 def upload(request: ImageModel): 
     msg = base64.b64decode(request.base64)
@@ -69,6 +67,8 @@ def upload(request: ImageModel):
                 "width": bbox[2],
                 "height": bbox[3],
             }
+            
+            
             text_list.append(im)
             i += 1
         print('text_list', text_list)
