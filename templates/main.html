@@ -162,7 +162,7 @@
                     upload.classList.remove('hide');
                 },
                 createTextHTML({text, top, left, width, height}) {
-                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(10px);">${text}</div>`;
+                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(1px);">${text}</div>`;
                 },
                 insertText() {
                     if(!this.texts.length) return;
