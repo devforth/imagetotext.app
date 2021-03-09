@@ -96,14 +96,57 @@
         .hide {
             display: none !important;
         }
+        .loader-texts[class] {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .lds-ring {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 80px;
+            z-index: 1000;
+        }
+        .lds-ring div {
+            box-sizing: border-box;
+            display: block;
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border: 8px solid black;
+            border-radius: 50%;
+            animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            border-color: black transparent transparent transparent;
+        }
+        .lds-ring div:nth-child(1) {
+            animation-delay: -0.45s;
+        }
+        .lds-ring div:nth-child(2) {
+            animation-delay: -0.3s;
+        }
+        .lds-ring div:nth-child(3) {
+            animation-delay: -0.15s;
+        }
+        @keyframes lds-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
     <main id="app">
         <div class="container">
             <div class="content">
-                <div class="img-with-texts">
-                    <img src="" class="img img-paste hide" />
+                <img src="" class="img img-paste hide" />
+                <div class="img-with-texts hide">
+                    
                 </div>
                 <div class="container-header">
                     <h1 class="title">Copy text from image</h1>
@@ -132,8 +175,10 @@
             var rootApp = document.querySelector("#app");
             var container = rootApp.querySelector('#app > .container');
             var img = container.querySelector('.img-paste');
+            var imgTexts = container.querySelector('.img-with-texts');
             var header = container.querySelector('.container-header');
             var upload = container.querySelector('.upload-wrapper');
+            var CONTAINER_MAX_WIDTH = window.parseInt(window.getComputedStyle(container)['max-width']);
 
             function callREST(img) {
                 return new Promise(function(resolve, reject) {
@@ -155,43 +200,121 @@
                 root: rootApp,
                 imgData: null,
                 texts: null,
+                base64: null,
+                scale: null,
                 setTexts(texts) {
                     this.texts = texts;
+
                     return this;
                 },
-                setImgSrc(src) {
-                    this.imgData = src.split(',')[1];
-                    img.src = src;
-                    this.showImage();
+                setBase64(base64) {
+                    this.base64 = base64;
+
                     return this;
                 },
-                showImage() {
+                getOriginalSize(base64) {
+                    return new Promise(function(resolve) {
+                        var img = new Image();
+
+                        img.onload = (readerEvent) => {
+                            var origSize =  {
+                                width: img.naturalWidth,
+                                height: img.naturalHeight,
+                            }
+
+                            resolve(origSize);
+                        }
+
+                        img.src = base64;
+                    })
+                },
+                getImgScale(base64) {
+                    var inst = this;
+
+                    return this.getOriginalSize(base64)
+                        .then(function(size) {
+                            var scale = size.width / CONTAINER_MAX_WIDTH;
+                            inst.scale = scale;
+                            return scale;
+                        });
+                },
+                setImgSrc() {
+                    this.imgData = this.base64.split(',')[1];
+
+                    img.onload = () => {
+                        this.showImageLayout();
+                    }
+
+                    img.src = this.base64;
+
+                    return this;
+                },
+                showImageLayout() {
                     img.classList.remove('hide');
+                    imgTexts.classList.remove('hide');
+
                     return this;
                 },
-                hideImage() {
-                    img.classList.remove('hide');
+                getLoaderElement() {
+                    const div = document.createElement('div');
+
+                    div.classList.add('lds-ring', 'loader', 'loader-texts');
+                    div.innerHTML = '<div></div><div></div><div></div><div></div>';
+                    
+                    return div;
+                },
+                showLoader() {
+                    this.hideLoader();
+
+                    var imgWrap = container.querySelector('.content');
+
+                    imgWrap.insertAdjacentElement('afterbegin', this.getLoaderElement());
+                    
+                    return this;
+                },
+                hideLoader() {
+                    var loader = container.querySelector('.loader');
+
+                    if(loader) loader.remove();
+
+                    return this;
+                },
+                hideImageLayout() {
+                    img.classList.add('hide');
+                    imgTexts.classList.add('hide');
+
                     return this;
                 },
                 hideInitLayout() {
                     header.classList.add('hide');
                     upload.classList.add('hide');
+
                     return this;
                 },
                 showInitLayout() {
                     header.classList.remove('hide');
                     upload.classList.remove('hide');
+
                     return this;
                 },
                 createTextHTML({text, top, left, width, height}) {
                     return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(1px);">${text}&nbsp;</div>`;
                 },
+                setScaleContainer() {
+                    this.getImgScale(this.base64)
+                        .then(function(scale) {
+                            if(scale < 1) return;
+                            console.log(scale);
+                            imgTexts.style.transform = `scale(${(1 / scale).toFixed(6)})`
+                        });
+                    return this;
+                },
                 insertText() {
                     if(!this.texts.length) return;
-                    const content = container.querySelector('.img-with-texts');
+        
                     this.texts.forEach(text => {
                         const html = this.createTextHTML(text);
-                        content.insertAdjacentHTML('beforeend', html);
+                        imgTexts.insertAdjacentHTML('beforeend', html);
                     });
                     return this;
                 }
@@ -209,15 +332,16 @@
             document.onpaste = (e) => {
                 var { items } = event.clipboardData || event.originalEvent.clipboardData;
                 Array.from(items).forEach((item) => {
-                    console.log(item);
                     if (item.kind === 'file') {
                         var blob = item.getAsFile();
                         var reader = new FileReader();
                         reader.onload = (readerEvent) => {
                             var result = readerEvent.target.result;
-                            app.hideInitLayout().setImgSrc(result);
+
+                            app.hideInitLayout().setBase64(result).setImgSrc().setScaleContainer().showLoader('text');
+                            
                             callREST({base64: app.imgData}).then((resp) => {
-                                app.setTexts(resp.texts).insertText();
+                                app.setTexts(resp.texts).insertText().hideLoader();
                             });
                                 
                         };
