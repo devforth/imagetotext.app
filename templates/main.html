@@ -184,14 +184,13 @@
                     return this;
                 },
                 createTextHTML({text, top, left, width, height}) {
-                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(1px);">${text}</div>`;
+                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(1px);">${text}&nbsp;</div>`;
                 },
                 insertText() {
                     if(!this.texts.length) return;
                     const content = container.querySelector('.img-with-texts');
                     this.texts.forEach(text => {
                         const html = this.createTextHTML(text);
-                        const content = container.querySelector('.content');
                         content.insertAdjacentHTML('beforeend', html);
                     });
                     return this;
@@ -216,11 +215,9 @@
                         var reader = new FileReader();
                         reader.onload = (readerEvent) => {
                             var result = readerEvent.target.result;
-                            app.hideInitLayout();
-                            app.setImgSrc(result);
+                            app.hideInitLayout().setImgSrc(result);
                             callREST({base64: app.imgData}).then((resp) => {
-                                app.setTexts(resp.texts);
-                                app.insertText();
+                                app.setTexts(resp.texts).insertText();
                             });
                                 
                         };
