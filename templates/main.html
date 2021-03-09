@@ -23,7 +23,7 @@
             height: 100vh;
         }
         .container {
-            max-width: 800px;
+            max-width: 90vw;
             display: flex;
             flex-direction: column;
             height: 100%;
@@ -43,7 +43,6 @@
             text-align: left;
         }
         .img-paste {
-            max-width: 800px;
             height: 100%;
             object-fit: contain;
             user-select: none;
@@ -174,7 +173,7 @@
         </div>
     </main>
 
-    <script async>
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
             var rootApp = document.querySelector("#app");
             var container = rootApp.querySelector('#app > .container');
@@ -182,7 +181,6 @@
             var imgTexts = container.querySelector('.img-with-texts');
             var header = container.querySelector('.container-header');
             var upload = container.querySelector('.upload-wrapper');
-            var CONTAINER_MAX_WIDTH = window.parseInt(window.getComputedStyle(container)['max-width']);
 
             function callREST(img) {
                 return new Promise(function(resolve, reject) {
@@ -206,6 +204,8 @@
                 texts: null,
                 base64: null,
                 scale: null,
+                naturalSize: null,
+                containerWidth: null,
                 setTexts(texts) {
                     this.texts = texts;
 
@@ -226,20 +226,30 @@
                                 height: img.naturalHeight,
                             }
 
+                            this.naturalSize = origSize;
+
                             resolve(origSize);
                         }
 
                         img.src = base64;
                     })
                 },
+                calcScale(size) {
+                    var containerWidth = this.calcContainerWidth();
+
+                    var scale = size.width / containerWidth;
+                    this.scale = scale;
+
+                    return scale;
+                },
                 getImgScale(base64) {
                     var inst = this;
 
+                    if(this.naturalSize) return Promise.resolve(this.calcScale(this.naturalSize));
+
                     return this.getOriginalSize(base64)
-                        .then(function(size) {
-                            var scale = size.width / CONTAINER_MAX_WIDTH;
-                            inst.scale = scale;
-                            return scale;
+                        .then(function(sizeOrig) {
+                            return inst.calcScale(sizeOrig);
                         });
                 },
                 setImgSrc() {
@@ -306,6 +316,10 @@
                 createTextHTML({text, top, left, width, height}) {
                     return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(3px);">${text}&nbsp;</div>`;
                 },
+                calcContainerWidth() {
+                    this.containerWidth = window.parseInt(window.getComputedStyle(container)['max-width']);
+                    return this.containerWidth;
+                },
                 setScaleContainer() {
                     this.getImgScale(this.base64)
                         .then(function(scale) {
@@ -366,6 +380,10 @@
                         reader.readAsDataURL(blob);
                     }
                 });
+            }
+
+            window.onresize = function(e) {
+                app.setScaleContainer();
             }
         })
     </script>
