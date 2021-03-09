@@ -46,6 +46,7 @@
             max-width: 800px;
             height: 100%;
             object-fit: contain;
+            user-select: none;
             width: 100%;
             pointer-events: none;
             opacity: 0.8;
@@ -73,7 +74,10 @@
             font-weight: 700;
             text-decoration: underline;
         }
-
+        .img-with-texts {
+            position: absolute;
+            top: 0;
+        }
         .upload-wrapper {
             margin-top: 94px;
             display: flex;
@@ -298,7 +302,7 @@
                     return this;
                 },
                 createTextHTML({text, top, left, width, height}) {
-                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(1px);">${text}&nbsp;</div>`;
+                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(3px);">${text}&nbsp;</div>`;
                 },
                 setScaleContainer() {
                     this.getImgScale(this.base64)
