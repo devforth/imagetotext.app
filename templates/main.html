@@ -288,8 +288,6 @@
                 setBase64(base64) {
                     this.base64 = base64;
 
-                    this.setImgToStorage(base64);
-
                     return this;
                 },
                 getOriginalSize(base64) {
@@ -311,12 +309,14 @@
                     })
                 },
                 setImgToStorage() {
-                    localStorage.setItem('img', JSON.stringify(this.base64));
+                    localStorage.setItem('imgInf', JSON.stringify({
+                        base64: this.base64,
+                        texts: this.texts,
+                    }));
                     return this;
                 },
                 getImgFromStorage() {
-                    var base64 = JSON.parse(localStorage.getItem('img'));
-                    this.base64 = base64;
+                    var base64 = JSON.parse(localStorage.getItem('imgInf'));
                     return base64;
                 },
                 calcScale(size) {
@@ -429,6 +429,8 @@
                     
                     var inst = this;
 
+                    this.setImgToStorage();
+
                     this.texts.forEach(function(text) {
                         const html = inst.createTextHTML(text);
                         imgTexts.insertAdjacentHTML('beforeend', html);
@@ -482,11 +484,9 @@
             var imgStorage = app.getImgFromStorage();
 
             if(imgStorage) {
-                app.startUploadLayout(imgStorage);
-                            
-                callREST({base64: app.imgData}).then(function(resp) {
-                    app.endUploadLayout(resp.texts);
-                });
+                console.log(imgStorage);
+                app.startUploadLayout(imgStorage.base64);          
+                app.endUploadLayout(imgStorage.texts);
             }
 
             document.onpaste = function(e) {
