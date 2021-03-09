@@ -308,8 +308,8 @@
                         img.src = base64;
                     })
                 },
-                setImgToStorage() {
-                    localStorage.setItem('imgInf', JSON.stringify({
+                setImgToStorage(inf) {
+                    localStorage.setItem('imgInf', JSON.stringify(inf || {
                         base64: this.base64,
                         texts: this.texts,
                     }));
@@ -483,8 +483,7 @@
 
             var imgStorage = app.getImgFromStorage();
 
-            if(imgStorage) {
-                console.log(imgStorage);
+            if(imgStorage.base64 && imgStorage.texts) {
                 app.startUploadLayout(imgStorage.base64);          
                 app.endUploadLayout(imgStorage.texts);
             }
