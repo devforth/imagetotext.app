@@ -19,7 +19,7 @@
             font-family: 'Roboto', sans-serif;
         }
         #app {
-            height: 100%;
+            height: 100vh;
         }
         .container {
             position: relative;
@@ -317,34 +317,94 @@
                 })
             }
 
-            const app = {
-                root: rootApp,
-                imgData: null,
-                texts: null,
-                base64: null,
-                scale: null,
-                naturalSize: null,
-                containerWidth: null,
-                isLoading: false,
-                anomalyRate: 10,
-                statusText: {
-                    linkCopy: {
-                        success: 'Your copy link to clipboard',
-                    },
-                    textCopy: {
-                        success: 'Your copy text to clipboard',
-                    }
+            var hideAndShowElm = {
+                showLoader() {
+                    this.hideLoader();
+                    this.isLoading = true;
+
+                    var imgWrap = container.querySelector('.content');
+
+                    imgWrap.insertAdjacentElement('afterbegin', this.getLoaderElement());
+                    
+                    return this;
                 },
-                setTexts(texts) {
-                    this.texts = texts;
+                showStatusMes(element, status = 'success') {
+                    statusMes.textContent = this.statusText[element][status];
+                    statusMes.classList.remove('hide');
+                    return this;
+                },
+                hideStatusMes() {
+                    statusMes.textContent = '';
+                    statusMes.classList.remove('hide');
+                    return this;
+                },
+                hideStatusWithTimeout(t = 2500) {
+                    var inst = this;
+                    setTimeout(function() {
+                        inst.hideStatusMes();
+                    }, t)
+                    return this;
+                },
+                hideLoader() {
+                    this.isLoading = false;
+                    var loader = container.querySelector('.loader');
+
+                    if(loader) loader.remove();
 
                     return this;
                 },
-                setBase64(base64) {
-                    this.base64 = base64;
+                showDragging() {
+                    dragging.classList.remove('hide');
+                    return this;
+                },
+                hideDragging() {
+                    dragging.classList.add('hide');
+                    return this;
+                },
+            };
+
+            var layouts = {
+                showImageLayout() {
+                    img.classList.remove('hide');
+                    imgTexts.classList.remove('hide');
+                    imgFooter.classList.remove('hide');
+
+                    container.querySelector('.content').style.alignItems = 'center';
 
                     return this;
                 },
+                hideImageLayout() {
+                    img.classList.add('hide');
+                    imgTexts.classList.add('hide');
+                    imgFooter.classList.add('hide');
+
+                    return this;
+                },
+                hideInitLayout() {
+                    header.classList.add('hide');
+                    upload.classList.add('hide');
+
+                    return this;
+                },
+                showInitLayout() {
+                    header.classList.remove('hide');
+                    upload.classList.remove('hide');
+
+                    container.querySelector('.content').style.alignItems = 'flex-start';
+
+                    return this;
+                },
+                startUploadLayout(base64) {
+                    this.hideInitLayout().setBase64(base64).setImgSrc().setScaleContainer().showLoader();
+                    return this;
+                },
+                endUploadLayout(texts) {
+                    app.setTexts(texts).insertText().hideLoader();
+                    return this;
+                },
+            };
+
+            var utils = {
                 getOriginalSize(base64) {
                     return new Promise(function(resolve) {
                         var img = new Image();
@@ -390,122 +450,9 @@
 
                     return scale;
                 },
-                getImgScale(base64) {
-                    var inst = this;
-
-                    if(this.naturalSize) return Promise.resolve(this.calcScale(this.naturalSize));
-
-                    return this.getOriginalSize(base64)
-                        .then(function(sizeOrig) {
-                            return inst.calcScale(sizeOrig);
-                        });
-                },
-                setImgSrc() {
-                    this.imgData = this.base64.split(',')[1];
-                    
-                    var inst = this;
-
-                    img.onload = function() {
-                        inst.showImageLayout();
-                    }
-
-                    img.src = this.base64;
-
-                    return this;
-                },
-                showImageLayout() {
-                    img.classList.remove('hide');
-                    imgTexts.classList.remove('hide');
-                    imgFooter.classList.remove('hide');
-
-                    container.querySelector('.content').style.alignItems = 'center';
-
-                    return this;
-                },
-                getLoaderElement() {
-                    const div = document.createElement('div');
-
-                    div.classList.add('lds-ring', 'loader', 'loader-texts');
-                    div.innerHTML = '<div></div><div></div><div></div><div></div>';
-                    
-                    return div;
-                },
-                showLoader() {
-                    this.hideLoader();
-                    this.isLoading = true;
-
-                    var imgWrap = container.querySelector('.content');
-
-                    imgWrap.insertAdjacentElement('afterbegin', this.getLoaderElement());
-                    
-                    return this;
-                },
-                showStatusMes(element, status = 'success') {
-                    statusMes.textContent = this.statusText[element][status];
-                    statusMes.classList.remove('hide');
-                },
-                hideStatusMes() {
-                    statusMes.textContent = '';
-                    statusMes.classList.remove('hide');
-                },
-                hideStatusWithTimeout(t = 2500) {
-                    var inst = this;
-                    setTimeout(function() {
-                        inst.hideStatusMes();
-                    }, t)
-                },
-                hideLoader() {
-                    this.isLoading = false;
-                    var loader = container.querySelector('.loader');
-
-                    if(loader) loader.remove();
-
-                    return this;
-                },
-                showDragging() {
-                    dragging.classList.remove('hide');
-                    return this;
-                },
-                hideDragging() {
-                    dragging.classList.add('hide');
-                    return this;
-                },
-                hideImageLayout() {
-                    img.classList.add('hide');
-                    imgTexts.classList.add('hide');
-                    imgFooter.classList.add('hide');
-
-                    return this;
-                },
-                hideInitLayout() {
-                    header.classList.add('hide');
-                    upload.classList.add('hide');
-
-                    return this;
-                },
-                showInitLayout() {
-                    header.classList.remove('hide');
-                    upload.classList.remove('hide');
-
-                    container.querySelector('.content').style.alignItems = 'flex-start';
-
-                    return this;
-                },
-                createTextHTML({text, top, left, width, height}) {
-                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(3px);">${text}&nbsp;</div>`;
-                },
                 calcContainerWidth() {
                     this.containerWidth = window.parseInt(window.getComputedStyle(container)['max-width']);
                     return this.containerWidth;
-                },
-                setScaleContainer() {
-                    this.getImgScale(this.base64)
-                        .then(function(scale) {
-                            if(scale < 1) return;
-                            imgTexts.style.transform = `scale(${(1 / scale).toFixed(6)})`
-                        });
-
-                    return this;
                 },
                 calcTextSizeParams() {
                     var maxH = 0;
@@ -538,6 +485,85 @@
                         minH,
                     }
                 },
+                getImgScale(base64) {
+                    var inst = this;
+
+                    if(this.naturalSize) return Promise.resolve(this.calcScale(this.naturalSize));
+
+                    return this.getOriginalSize(base64)
+                        .then(function(sizeOrig) {
+                            return inst.calcScale(sizeOrig);
+                        });
+                },
+            };
+
+            var app = {
+                root: rootApp,
+                imgData: null,
+                texts: null,
+                base64: null,
+                scale: null,
+                naturalSize: null,
+                containerWidth: null,
+                isLoading: false,
+                anomalyRate: 10,
+                statusText: {
+                    linkCopy: {
+                        success: 'Your copy link to clipboard',
+                    },
+                    textCopy: {
+                        success: 'Your copy text to clipboard',
+                    }
+                },
+                ...hideAndShowElm,
+                ...layouts,
+                ...utils,
+                setTexts(texts) {
+                    this.texts = texts;
+
+                    return this;
+                },
+                setBase64(base64) {
+                    this.base64 = base64;
+
+                    return this;
+                },
+                setImgSrc() {
+                    this.imgData = this.base64.split(',')[1];
+                    
+                    var inst = this;
+
+                    img.onload = function() {
+                        inst.showImageLayout();
+                    }
+
+                    img.src = this.base64;
+
+                    return this;
+                },
+                getLoaderElement() {
+                    const div = document.createElement('div');
+
+                    div.classList.add('lds-ring', 'loader', 'loader-texts');
+                    div.innerHTML = '<div></div><div></div><div></div><div></div>';
+                    
+                    return div;
+                },
+                getTexts() {
+                    return imgTexts.textContent.trim();
+                },
+                createTextHTML({text, top, left, width, height}) {
+                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(3px);">${text}&nbsp;</div>`;
+                },
+                setScaleContainer() {
+                    this.getImgScale(this.base64)
+                        .then(function(scale) {
+                            if(scale < 1) return;
+                            imgTexts.style.transform = `scale(${(1 / scale).toFixed(6)})`
+                        });
+
+                    return this;
+                },
                 insertText() {
                     if(!this.texts.length) return this;
 
@@ -547,7 +573,6 @@
 
                     this.setImgToStorage();
                     var textParams = this.calcTextSizeParams();
-                    console.log(textParams);
 
                     this.texts.forEach(function(text) {
                         if(textParams.rateMax >= inst.anomalyRate && textParams.maxH === text.height) text.height = textParams.popularH;
@@ -558,12 +583,6 @@
                     });
 
                     return this;
-                },
-                startUploadLayout(base64) {
-                    this.hideInitLayout().setBase64(base64).setImgSrc().setScaleContainer().showLoader();
-                },
-                endUploadLayout(texts) {
-                    app.setTexts(texts).insertText().hideLoader();
                 },
                 reset() {
                     var inst = this;
@@ -583,38 +602,31 @@
 
                     this.hideImageLayout().hideLoader().setImgToStorage('').showInitLayout();
                 },
-                getTexts() {
-                    return imgTexts.textContent.trim();
-                },
-            }
+            };
 
             window.onResetClick = function() {
                 app.reset();
-            }
+            };
 
             window.onCopyLink = function() {
-                app.showStatusMes('linkCopy');
+                app.showStatusMes('linkCopy').hideStatusWithTimeout();;
 
                 navigator.clipboard.writeText(document.URL);
-
-                app.hideStatusWithTimeout();
-            }
+            };
 
             window.app = app;
 
             window.copyText = function() {
-                app.showStatusMes('textCopy');
+                app.showStatusMes('textCopy').hideStatusWithTimeout();
 
                 navigator.clipboard.writeText(app.getTexts());
-
-                app.hideStatusWithTimeout();
-            }
+            };
 
             var imgStorage = app.getImgFromStorage();
 
             if(imgStorage && imgStorage.base64 && imgStorage.texts) {
-                app.startUploadLayout(imgStorage.base64);          
-                app.endUploadLayout(imgStorage.texts);
+                app.startUploadLayout(imgStorage.base64)
+                    .endUploadLayout(imgStorage.texts);          
             } else {
                 app.showInitLayout();
             }
@@ -624,15 +636,18 @@
 
                 app.showDragging();
             }, false);
+
             window.addEventListener('dragleave', function(e) {
                 e.preventDefault();
                 if (e.fromElement === null) {
                     app.hideDragging();
                 }
             }, false);
+
             window.addEventListener("dragover",function(e) {
                 e.preventDefault();
             }, false);
+
             window.addEventListener("drop", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -669,9 +684,11 @@
                     if (item.kind === 'file') {
                         var blob = item.getAsFile();
                         var reader = new FileReader();
+
                         reader.onload = (readerEvent) => {
                             sendImageToServer(readerEvent.target.result);
                         };
+                        
                         reader.readAsDataURL(blob);
                     }
                 });
