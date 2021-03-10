@@ -459,17 +459,16 @@
                 calcTextSizeParams() {
                     var maxH = 0;
                     var minH = Infinity;
+                    var sum = 0;
                     
                     this.texts.forEach(function(text) {
                         if(text.height > maxH) maxH = text.height;
                         if(text.height < minH) minH = text.height;
+                        sum += text.height;
                     });
-
-                    var sumOfElements = this.texts.reduce((sum, val) => {
-                        if(val.height !== maxH || val.height !== minH) return sum + val.height;
-                    }, 0);
-
-                    var averageH = sumOfElements / this.texts.length - 2;
+                    
+                    sum -= maxH + minH;
+                    var averageH = sum / this.texts.length - 2;
 
                     var popularH = this.texts.sort((a,b) =>
                         this.texts.filter(v => v.height=== a.height).length
