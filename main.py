@@ -10,7 +10,7 @@ import locale
 locale.setlocale(locale.LC_ALL, 'C')
 from PIL import Image
 Image.MAX_IMAGE_PIXELS=1000000000
-from tesserocr import PyTessBaseAPI, RIL, iterate_level
+from tesserocr import PyTessBaseAPI, RIL, iterate_level, PSM, OEM
 
 
 
@@ -39,7 +39,7 @@ def upload(request: ImageModel):
     image = Image.open(buf)
 
     try:
-        with PyTessBaseAPI() as api:
+        with PyTessBaseAPI(psm=PSM.OSD_ONLY, oem=OEM.LSTM_ONLY) as api:
             api.SetImage(image)
             api.Recognize()
             api.SetVariable("save_blob_choices","T")
