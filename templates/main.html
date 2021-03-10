@@ -402,6 +402,10 @@
                     app.setTexts(texts).insertText().hideLoader();
                     return this;
                 },
+                restoreInitLayout() {
+                    this.clearState().hideImageLayout().hideLoader().setImgToStorage().showInitLayout();
+                    return this;
+                },
             };
 
             var utils = {
@@ -500,11 +504,14 @@
                 },
                 clearState(includeProp = ['root']) {
                     var inst = this;
+                    
                     Object.keys(inst).forEach(function(key) {
                         if(typeof inst[key] !== 'function' && !includeProp.includes(key)) {
                             inst[key] = null;
                         }
                     });
+
+                    return this;
                 },
             };
 
@@ -596,20 +603,11 @@
                     return this;
                 },
                 reset() {
-                    var inst = this;
-
-                    this.hideLoader();
-
-                    this.setImgToStorage(null);
-
-                   this.clearState();
-
                     imgTexts.innerHTML = '';
                     img.src = '';
+                    imgTexts.style.transform = '';
 
-                    console.log(app);
-
-                    this.hideImageLayout().hideLoader().setImgToStorage('').showInitLayout();
+                    this.restoreInitLayout();
                 },
             };
 
