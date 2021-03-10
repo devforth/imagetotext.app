@@ -53,7 +53,6 @@ def upload(request: ImageModel):
             symbol = r.GetUTF8Text(level)
             conf = r.Confidence(level)
             bbox = r.BoundingBoxInternal(level)
-            print(bbox, symbol, conf)
             im = {
                 "text": symbol,
                 "left": bbox[0],
