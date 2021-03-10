@@ -473,15 +473,15 @@
                         - this.texts.filter(v => v.height === b.height).length
                     ).pop().height;
 
-                    var rateMax = maxH / popularH;
-                    var rateMin = popularH / minH;
+                    var maxRate = maxH / popularH;
+                    var minRate = popularH / minH;
 
                     return  { 
                         maxH, 
                         averageH,
                         popularH,
-                        rateMax,
-                        rateMin,
+                        maxRate,
+                        minRate,
                         minH,
                     }
                 },
@@ -494,6 +494,17 @@
                         .then(function(sizeOrig) {
                             return inst.calcScale(sizeOrig);
                         });
+                },
+                chechIsAnomalyRate(type, textHeight, textParams) {
+                    return Boolean(textParams[`${type}Rate`] >= this.anomalyRate && textParams[`${type}H`] === textHeight)
+                },
+                clearState(includeProp = ['root']) {
+                    var inst = this;
+                    Object.keys(inst).forEach(function(key) {
+                        if(typeof inst[key] !== 'function' && !includeProp.includes(key)) {
+                            inst[key] = null;
+                        }
+                    });
                 },
             };
 
@@ -575,8 +586,8 @@
                     var textParams = this.calcTextSizeParams();
 
                     this.texts.forEach(function(text) {
-                        if(textParams.rateMax >= inst.anomalyRate && textParams.maxH === text.height) text.height = textParams.popularH;
-                        if(textParams.rateMin >= inst.anomalyRate && textParams.minH === text.height) text.height = textParams.popularH;
+                        if(inst.chechIsAnomalyRate('max', text.height, textParams)) text.height = textParams.popularH;
+                        if(inst.chechIsAnomalyRate('min', text.height, textParams)) text.height = textParams.popularH;
                     
                         const html = inst.createTextHTML(text);
                         imgTexts.insertAdjacentHTML('beforeend', html);
@@ -591,14 +602,12 @@
 
                     this.setImgToStorage(null);
 
-                    Object.keys(inst).forEach(function(key) {
-                        if(typeof inst[key] !== 'function' && key !== 'root') {
-                            inst[key] = null;
-                        }
-                    });
+                   this.clearState();
 
                     imgTexts.innerHTML = '';
                     img.src = '';
+
+                    console.log(app);
 
                     this.hideImageLayout().hideLoader().setImgToStorage('').showInitLayout();
                 },
@@ -688,7 +697,7 @@
                         reader.onload = (readerEvent) => {
                             sendImageToServer(readerEvent.target.result);
                         };
-                        
+
                         reader.readAsDataURL(blob);
                     }
                 });
