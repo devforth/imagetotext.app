@@ -47,7 +47,6 @@ def upload(request: ImageModel):
         level=RIL.WORD
         boxes = api.GetComponentImages(RIL.TEXTLINE, True)
         text_list = []
-        print('Found {} textline image components.'.format(len(boxes)))
         i = 0
         for r in iterate_level(ri, level):
             symbol = r.GetUTF8Text(level)
@@ -64,7 +63,6 @@ def upload(request: ImageModel):
 
             text_list.append(im)
             i += 1
-        print('text_list', text_list)
     return {
         "texts": text_list,
     }
