@@ -39,7 +39,7 @@ def upload(request: ImageModel):
     image = Image.open(buf)
 
     try:
-        with PyTessBaseAPI(psm=PSM.OSD_ONLY, oem=OEM.LSTM_ONLY) as api:
+        with PyTessBaseAPI(oem=OEM.LSTM_ONLY) as api:
             api.SetImage(image)
             api.Recognize()
             api.SetVariable("save_blob_choices","T")
