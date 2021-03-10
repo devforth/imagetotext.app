@@ -309,14 +309,22 @@
                     })
                 },
                 setImgToStorage() {
-                    localStorage.setItem('imgInf', JSON.stringify({
-                        base64: this.base64,
-                        texts: this.texts,
-                    }));
+                    try {
+                        localStorage.setItem('imgInf', JSON.stringify({
+                            base64: this.base64,
+                            texts: this.texts,
+                        }));
+                    } catch (e) {
+                        console.log(e);
+                    }
                     return this;
                 },
                 getImgFromStorage() {
-                    var base64 = JSON.parse(localStorage.getItem('imgInf'));
+                    try {
+                        var base64 = JSON.parse(localStorage.getItem('imgInf'));
+                    } catch (e) {
+                        console.log(e);
+                    }
                     return base64;
                 },
                 calcScale(size) {
@@ -501,10 +509,13 @@
                             var result = readerEvent.target.result;
 
                             app.startUploadLayout(result);
-                            
-                            callREST({base64: app.imgData}).then(function(resp) {
-                                app.endUploadLayout(resp.texts);
-                            });
+                            try {
+                                callREST({base64: app.imgData}).then(function(resp) {
+                                    app.endUploadLayout(resp.texts);
+                                });
+                            } catch (e) {
+                                console.log(e);
+                            }
                                 
                         };
                         reader.readAsDataURL(blob);
