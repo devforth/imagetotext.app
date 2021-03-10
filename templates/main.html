@@ -108,6 +108,13 @@
             background: #EFEFEF;
             border-radius: 0.625rem;
         }
+        .status-message {
+            margin: 0 auto;
+            margin-top: 2rem;
+            font-size: 1.5rem;
+            color: green;
+            font-weight: 400;
+        }
         .upload-description {
             display: flex;
             flex-direction: column;
@@ -120,15 +127,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 2.063rem;
+            margin-top: 2rem;
             flex-wrap: wrap;
         }
         .img-with-text-footer .footer-social-share .social-button:last-child > svg{
             margin-right: 0px;
         }
+        .img-with-text-footer .footer-item.footer-social-share {
+            opacity: 1;
+        }
         .img-with-text-footer .footer-item.copy svg {
             margin-right: 0px;
             margin-left: 0.813rem;
+        }
+        .img-with-text-footer .footer-item.footer-social-share svg {
+            fill: none;
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+        .img-with-text-footer .footer-item.footer-social-share svg:hover {
+            opacity: 1;
+            fill: black;
+        }
+        .img-with-text-footer .footer-item {
+            opacity: 0.5;
+            transition: 0.3s;
+        }
+        .img-with-text-footer .footer-item:hover {
+            opacity: 1;
         }
         .img-with-text-footer .footer-item {
             margin-right: 2rem;
@@ -257,6 +283,8 @@
                             </svg>
                         </div>
                     </div>
+                </div>
+                <div class="status-message hide" onclick="window.app.hideStatusMes()"></div>
             </div>
         </div>
     </main>
@@ -271,6 +299,7 @@
             var upload = container.querySelector('.upload-wrapper');
             var imgFooter = container.querySelector('.img-with-text-footer');
             var dragging = container.querySelector('.dragging');
+            var statusMes = container.querySelector('.status-message');
 
             function callREST(img) {
                 return new Promise(function(resolve, reject) {
@@ -298,6 +327,14 @@
                 containerWidth: null,
                 isLoading: false,
                 anomalyRate: 10,
+                statusText: {
+                    linkCopy: {
+                        success: 'Your copy link to clipboard',
+                    },
+                    textCopy: {
+                        success: 'Your copy text to clipboard',
+                    }
+                },
                 setTexts(texts) {
                     this.texts = texts;
 
@@ -403,6 +440,20 @@
                     
                     return this;
                 },
+                showStatusMes(element, status = 'success') {
+                    statusMes.textContent = this.statusText[element][status];
+                    statusMes.classList.remove('hide');
+                },
+                hideStatusMes() {
+                    statusMes.textContent = '';
+                    statusMes.classList.remove('hide');
+                },
+                hideStatusWithTimeout(t = 2500) {
+                    var inst = this;
+                    setTimeout(function() {
+                        inst.hideStatusMes();
+                    }, t)
+                },
                 hideLoader() {
                     this.isLoading = false;
                     var loader = container.querySelector('.loader');
@@ -466,7 +517,7 @@
                         if(text.height < minH) minH = text.height;
                         sum += text.height;
                     });
-                    
+
                     sum -= maxH + minH;
                     var averageH = sum / this.texts.length - 2;
 
@@ -542,13 +593,21 @@
             }
 
             window.onCopyLink = function() {
+                app.showStatusMes('linkCopy');
+
                 navigator.clipboard.writeText(document.URL);
+
+                app.hideStatusWithTimeout();
             }
 
             window.app = app;
 
             window.copyText = function() {
+                app.showStatusMes('textCopy');
+
                 navigator.clipboard.writeText(app.getTexts());
+
+                app.hideStatusWithTimeout();
             }
 
             var imgStorage = app.getImgFromStorage();
