@@ -97,7 +97,7 @@
         }
         .img-with-texts {
             position: absolute;
-            top: 3.375rem;
+            top: 3.44rem;
             left: 0;
         }
         .upload-wrapper {
@@ -312,6 +312,10 @@
                         },
                         body: JSON.stringify(img),
                     }).then(response => {
+                        if(!response.ok) {
+                            reject('no text');
+                            return;
+                        }
                         response.json().then(json => {
                            resolve(json)
                         });
@@ -671,11 +675,15 @@
             function sendImageToServer(base64) {
                 app.startUploadLayout(base64);
                 try {
-                    callREST({base64: app.imgData}).then(function(resp) {
-                        app.endUploadLayout(resp.texts);
-                    });
+                    callREST({base64: app.imgData})
+                        .then(function(resp) {
+                            app.endUploadLayout(resp.texts);
+                        })
+                        .catch(() => {
+                            app.hideLoader();
+                        })
                 } catch (e) {
-                    console.log(e);
+                    app.hideLoader();
                 }
             }
 
