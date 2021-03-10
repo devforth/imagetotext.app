@@ -19,16 +19,30 @@
             font-family: 'Roboto', sans-serif;
         }
         #app {
-            margin-top: 4.56rem;
             height: 100vh;
         }
         .container {
+            position: relative;
             max-width: 90vw;
             display: flex;
             flex-direction: column;
             height: 100%;
             align-items: center;
             margin: 0 auto;
+        }
+        .dragging {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #828282;
+            background: #ebebf3;
+            font-size: 2rem;
+            z-index: 1000;
         }
         .container-header {
             display: flex;
@@ -59,6 +73,7 @@
             text-align: left;
         }
         .content {
+            margin-top: 4.56rem;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -178,6 +193,7 @@
 <body>
     <main id="app">
         <div class="container">
+            <div class="dragging hide">Drop files here"</div>
             <div class="content">
                 <img src="" class="img img-paste hide" />
                 <div class="img-with-texts hide"></div>
@@ -254,6 +270,7 @@
             var header = container.querySelector('.container-header');
             var upload = container.querySelector('.upload-wrapper');
             var imgFooter = container.querySelector('.img-with-text-footer');
+            var dragging = container.querySelector('.dragging');
 
             function callREST(img) {
                 return new Promise(function(resolve, reject) {
@@ -393,6 +410,14 @@
 
                     return this;
                 },
+                showDragging() {
+                    dragging.classList.remove('hide');
+                    return this;
+                },
+                hideDragging() {
+                    dragging.classList.add('hide');
+                    return this;
+                },
                 hideImageLayout() {
                     img.classList.add('hide');
                     imgTexts.classList.add('hide');
@@ -498,6 +523,49 @@
                 app.showInitLayout();
             }
 
+            window.addEventListener('dragenter', function(e) {
+                e.preventDefault();
+
+                app.showDragging();
+            }, false);
+            window.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                if (e.fromElement === null) {
+                    app.hideDragging();
+                }
+            }, false);
+            window.addEventListener("dragover",function(e) {
+                e.preventDefault();
+            }, false);
+            window.addEventListener("drop", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                app.hideDragging();
+
+                var files = Array.from(e.dataTransfer.files);
+                
+                files.forEach((f) => {
+                    var reader = new FileReader();
+
+                    reader.onload = (ev) => {
+                        sendImageToServer(ev.target.result);
+                    }
+
+                    reader.readAsDataURL(file);
+                });
+            }, false);
+
+            function sendImageToServer(base64) {
+                app.startUploadLayout(result);
+                try {
+                    callREST({base64: app.imgData}).then(function(resp) {
+                        app.endUploadLayout(resp.texts);
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
             document.onpaste = function(e) {
                 var { items } = event.clipboardData || event.originalEvent.clipboardData;
                 
@@ -506,17 +574,7 @@
                         var blob = item.getAsFile();
                         var reader = new FileReader();
                         reader.onload = (readerEvent) => {
-                            var result = readerEvent.target.result;
-
-                            app.startUploadLayout(result);
-                            try {
-                                callREST({base64: app.imgData}).then(function(resp) {
-                                    app.endUploadLayout(resp.texts);
-                                });
-                            } catch (e) {
-                                console.log(e);
-                            }
-                                
+                            sendImageToServer(readerEvent.target.result);
                         };
                         reader.readAsDataURL(blob);
                     }
