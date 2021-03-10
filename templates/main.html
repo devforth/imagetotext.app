@@ -540,23 +540,23 @@
             window.addEventListener("drop", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                
                 app.hideDragging();
 
                 var files = Array.from(e.dataTransfer.files);
-                
-                files.forEach((f) => {
-                    var reader = new FileReader();
+              
+                var reader = new FileReader();
 
-                    reader.onload = (ev) => {
-                        sendImageToServer(ev.target.result);
-                    }
+                reader.onload = (ev) => {
+                    sendImageToServer(ev.target.result);
+                }
 
-                    reader.readAsDataURL(file);
-                });
+                reader.readAsDataURL(files[0]);
+       
             }, false);
 
             function sendImageToServer(base64) {
-                app.startUploadLayout(result);
+                app.startUploadLayout(base64);
                 try {
                     callREST({base64: app.imgData}).then(function(resp) {
                         app.endUploadLayout(resp.texts);
