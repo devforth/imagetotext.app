@@ -181,12 +181,12 @@
             <div class="content">
                 <img src="" class="img img-paste hide" />
                 <div class="img-with-texts hide"></div>
-                <div class="container-header">
+                <div class="container-header hide">
                     <h1 class="title">Copy text from image</h1>
                     <h2 class="subtitle">Transform image to text by Ctrl+V and copy text in one click</h2>
                 </div>
 
-                <div class="upload-wrapper">
+                <div class="upload-wrapper hide">
                     <div class="upload-img">
                         <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g opacity="0.3">
@@ -308,8 +308,8 @@
                         img.src = base64;
                     })
                 },
-                setImgToStorage(inf) {
-                    localStorage.setItem('imgInf', JSON.stringify(inf || {
+                setImgToStorage() {
+                    localStorage.setItem('imgInf', JSON.stringify({
                         base64: this.base64,
                         texts: this.texts,
                     }));
@@ -483,9 +483,11 @@
 
             var imgStorage = app.getImgFromStorage();
 
-            if(imgStorage.base64 && imgStorage.texts) {
+            if(imgStorage && imgStorage.base64 && imgStorage.texts) {
                 app.startUploadLayout(imgStorage.base64);          
                 app.endUploadLayout(imgStorage.texts);
+            } else {
+                app.showInitLayout();
             }
 
             document.onpaste = function(e) {
