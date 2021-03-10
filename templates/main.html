@@ -297,6 +297,7 @@
                 naturalSize: null,
                 containerWidth: null,
                 isLoading: false,
+                anomalyRate: 10,
                 setTexts(texts) {
                     this.texts = texts;
 
@@ -455,6 +456,38 @@
 
                     return this;
                 },
+                calcTextSizeParams() {
+                    var maxH = 0;
+                    var minH = Infinity;
+                    
+                    this.texts.forEach(function(text) {
+                        if(text.height > maxH) maxH = text.height;
+                        if(text.height < minH) minH = text.height;
+                    });
+
+                    var sumOfElements = this.texts.reduce((sum, val) => {
+                        if(val.height !== maxH || val.height !== minH) return sum + val.height;
+                    }, 0);
+
+                    var averageH = sumOfElements / this.texts.length - 2;
+
+                    var popularH = this.texts.sort((a,b) =>
+                        this.texts.filter(v => v.height=== a.height).length
+                        - this.texts.filter(v => v.height === b.height).length
+                    ).pop().height;
+
+                    var rateMax = maxH / popularH;
+                    var rateMin = popularH / minH;
+
+                    return  { 
+                        maxH, 
+                        averageH,
+                        popularH,
+                        rateMax,
+                        rateMin,
+                        minH,
+                    }
+                },
                 insertText() {
                     if(!this.texts.length) return this;
 
@@ -463,8 +496,13 @@
                     var inst = this;
 
                     this.setImgToStorage();
+                    var textParams = this.calcTextSizeParams();
+                    console.log(textParams);
 
                     this.texts.forEach(function(text) {
+                        if(textParams.rateMax >= inst.anomalyRate && textParams.maxH === text.height) text.height = textParams.popularH;
+                        if(textParams.rateMin >= inst.anomalyRate && textParams.minH === text.height) text.height = textParams.popularH;
+                    
                         const html = inst.createTextHTML(text);
                         imgTexts.insertAdjacentHTML('beforeend', html);
                     });
