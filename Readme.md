@@ -1,5 +1,5 @@
 
-Demo: [https://imagetotext.app/](https://imagetotext.app/)
+Deployed application: [https://imagetotext.app/](https://imagetotext.app/)
 
 # test backend
 
