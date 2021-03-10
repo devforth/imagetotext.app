@@ -19,7 +19,7 @@
             font-family: 'Roboto', sans-serif;
         }
         #app {
-            height: 100vh;
+            height: 100%;
         }
         .container {
             position: relative;
@@ -29,6 +29,9 @@
             height: 100%;
             align-items: center;
             margin: 0 auto;
+        }
+        .input-upload {
+            display: none;
         }
         .dragging {
             position: absolute;
@@ -90,6 +93,7 @@
         .bold-underline[class] {
             font-weight: 700;
             text-decoration: underline;
+            cursor: pointer;
         }
         .img-with-texts {
             position: absolute;
@@ -238,7 +242,7 @@
                     </div>
                     <div class="upload-description">
                         <div class="upload-title">Ctrl+V screenshot</div>
-                        <div class="upload-subtitle">or <span class="bold-underline">UPLOAD FILE</span></div>
+                        <div class="upload-subtitle">or <span class="bold-underline" onclick="onUploadClick()">UPLOAD FILE</span></div>
                     </div>
                 </div>
                 <div class="img-with-text-footer hide">
@@ -573,6 +577,19 @@
                 createTextHTML({text, top, left, width, height}) {
                     return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(3px);">${text}&nbsp;</div>`;
                 },
+                createInputElement() {
+                    var input = document.createElement('input');
+                    input.type = 'file';
+                    input.classList.add('input-upload');
+                    return input;
+                },
+                removeInputElement() {
+                    var inputExist = container.querySelector('.input-upload');
+
+                    if(inputExist) inputExist.remove();
+
+                    return this;
+                },
                 setScaleContainer() {
                     this.getImgScale(this.base64)
                         .then(function(scale) {
@@ -621,6 +638,22 @@
                 navigator.clipboard.writeText(document.URL);
             };
 
+            window.onUploadClick = function() {
+                var input = app.removeInputElement().createInputElement();
+
+                input.click();
+
+                input.addEventListener('change', function(e) {
+                    var { files } = input;
+
+                    var file = Array.from(files)[0];
+                    
+                    convertOnBase64AndSubmit(file);
+                }, {once: true});
+
+                container.append(input);
+            }
+
             window.app = app;
 
             window.copyText = function() {
@@ -663,14 +696,7 @@
 
                 var files = Array.from(e.dataTransfer.files);
               
-                var reader = new FileReader();
-
-                reader.onload = (ev) => {
-                    sendImageToServer(ev.target.result);
-                }
-
-                reader.readAsDataURL(files[0]);
-       
+                convertOnBase64AndSubmit(files[0]);
             }, false);
 
             function sendImageToServer(base64) {
@@ -684,19 +710,24 @@
                 }
             }
 
+            function convertOnBase64AndSubmit(file) {
+                var reader = new FileReader();
+
+                reader.onload = (ev) => {
+                    sendImageToServer(ev.target.result);
+                }
+
+                reader.readAsDataURL(file);
+            }
+
             document.onpaste = function(e) {
                 var { items } = event.clipboardData || event.originalEvent.clipboardData;
                 
                 Array.from(items).forEach(function(item) {
                     if (item.kind === 'file') {
                         var blob = item.getAsFile();
-                        var reader = new FileReader();
 
-                        reader.onload = (readerEvent) => {
-                            sendImageToServer(readerEvent.target.result);
-                        };
-
-                        reader.readAsDataURL(blob);
+                        convertOnBase64AndSubmit(blob);
                     }
                 });
             }
