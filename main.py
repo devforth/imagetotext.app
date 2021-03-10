@@ -37,7 +37,6 @@ def upload(request: ImageModel):
     msg = base64.b64decode(request.base64)
     buf = io.BytesIO(msg)
     image = Image.open(buf)
-    print('____buff', image);
     
     with PyTessBaseAPI() as api:
         api.SetImage(image)
