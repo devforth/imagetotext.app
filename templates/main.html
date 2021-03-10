@@ -97,7 +97,7 @@
         }
         .img-with-texts {
             position: absolute;
-            top: 0;
+            top: 54px;
             left: 0;
         }
         .upload-wrapper {
@@ -131,7 +131,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 2rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap;
         }
         .img-with-text-footer .footer-social-share .social-button:last-child > svg{
@@ -225,26 +225,6 @@
         <div class="container">
             <div class="dragging hide">Drop files here"</div>
             <div class="content">
-                <img src="" class="img img-paste hide" />
-                <div class="img-with-texts hide"></div>
-                <div class="container-header hide">
-                    <h1 class="title">Copy text from image</h1>
-                    <h2 class="subtitle">Transform image to text by Ctrl+V and copy text in one click</h2>
-                </div>
-
-                <div class="upload-wrapper hide">
-                    <div class="upload-img">
-                        <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g opacity="0.3">
-                            <path d="M12 12V18H18V12H12ZM24 12V18H30V12H24ZM36 12V18H42V12H36ZM48 12V18H54V12H48ZM60 12V18H66V12H60ZM72 12V18H78V12H72ZM12 24V30H18V24H12ZM72 24V30H78V24H72ZM12 36V42H18V36H12ZM72 36V42H78V36H72ZM43.5 39L42.5625 40.2188L39 45H27H24V48V81V84H27H81H84V81V48V45H81H69L65.4375 40.2188L64.5 39H63H45H43.5ZM46.5 45H61.5L65.0625 49.7812L66 51H67.5H78V78H30V51H40.5H42L42.9375 49.7812L46.5 45ZM12 48V54H18V48H12ZM54 51C47.4081 51 42 56.4081 42 63C42 69.5919 47.4081 75 54 75C60.5919 75 66 69.5919 66 63C66 56.4081 60.5919 51 54 51ZM54 57C57.3492 57 60 59.6508 60 63C60 66.3492 57.3492 69 54 69C50.6508 69 48 66.3492 48 63C48 59.6508 50.6508 57 54 57ZM12 60V66H18V60H12Z" fill="black"/>
-                            </g>
-                        </svg>
-                    </div>
-                    <div class="upload-description">
-                        <div class="upload-title">Ctrl+V screenshot</div>
-                        <div class="upload-subtitle">or <span class="bold-underline" onclick="onUploadClick()">UPLOAD FILE</span></div>
-                    </div>
-                </div>
                 <div class="img-with-text-footer hide">
                     <div class="footer-item bold-underline" onclick="onResetClick()">NEW IMAGE</div>
                     <div class="footer-item footer-social-share">
@@ -288,7 +268,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="status-message hide" onclick="window.app.hideStatusMes()"></div>
+                <img src="" class="img img-paste hide" />
+                <div class="img-with-texts hide"></div>
+                <div class="container-header hide">
+                    <h1 class="title">Copy text from image</h1>
+                    <h2 class="subtitle">Transform image to text by Ctrl+V and copy text in one click</h2>
+                </div>
+
+                <div class="upload-wrapper hide">
+                    <div class="upload-img">
+                        <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g opacity="0.3">
+                            <path d="M12 12V18H18V12H12ZM24 12V18H30V12H24ZM36 12V18H42V12H36ZM48 12V18H54V12H48ZM60 12V18H66V12H60ZM72 12V18H78V12H72ZM12 24V30H18V24H12ZM72 24V30H78V24H72ZM12 36V42H18V36H12ZM72 36V42H78V36H72ZM43.5 39L42.5625 40.2188L39 45H27H24V48V81V84H27H81H84V81V48V45H81H69L65.4375 40.2188L64.5 39H63H45H43.5ZM46.5 45H61.5L65.0625 49.7812L66 51H67.5H78V78H30V51H40.5H42L42.9375 49.7812L46.5 45ZM12 48V54H18V48H12ZM54 51C47.4081 51 42 56.4081 42 63C42 69.5919 47.4081 75 54 75C60.5919 75 66 69.5919 66 63C66 56.4081 60.5919 51 54 51ZM54 57C57.3492 57 60 59.6508 60 63C60 66.3492 57.3492 69 54 69C50.6508 69 48 66.3492 48 63C48 59.6508 50.6508 57 54 57ZM12 60V66H18V60H12Z" fill="black"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="upload-description">
+                        <div class="upload-title">Ctrl+V screenshot</div>
+                        <div class="upload-subtitle">or <span class="bold-underline" onclick="onUploadClick()">UPLOAD FILE</span></div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -303,7 +302,6 @@
             var upload = container.querySelector('.upload-wrapper');
             var imgFooter = container.querySelector('.img-with-text-footer');
             var dragging = container.querySelector('.dragging');
-            var statusMes = container.querySelector('.status-message');
 
             function callREST(img) {
                 return new Promise(function(resolve, reject) {
@@ -330,23 +328,6 @@
 
                     imgWrap.insertAdjacentElement('afterbegin', this.getLoaderElement());
                     
-                    return this;
-                },
-                showStatusMes(element, status = 'success') {
-                    statusMes.textContent = this.statusText[element][status];
-                    statusMes.classList.remove('hide');
-                    return this;
-                },
-                hideStatusMes() {
-                    statusMes.textContent = '';
-                    statusMes.classList.remove('hide');
-                    return this;
-                },
-                hideStatusWithTimeout(t = 2500) {
-                    var inst = this;
-                    setTimeout(function() {
-                        inst.hideStatusMes();
-                    }, t)
                     return this;
                 },
                 hideLoader() {
@@ -529,14 +510,6 @@
                 containerWidth: null,
                 isLoading: false,
                 anomalyRate: 10,
-                statusText: {
-                    linkCopy: {
-                        success: 'Your copy link to clipboard',
-                    },
-                    textCopy: {
-                        success: 'Your copy text to clipboard',
-                    }
-                },
                 ...hideAndShowElm,
                 ...layouts,
                 ...utils,
@@ -633,8 +606,6 @@
             };
 
             window.onCopyLink = function() {
-                app.showStatusMes('linkCopy').hideStatusWithTimeout();;
-
                 navigator.clipboard.writeText(document.URL);
             };
 
@@ -657,8 +628,6 @@
             window.app = app;
 
             window.copyText = function() {
-                app.showStatusMes('textCopy').hideStatusWithTimeout();
-
                 navigator.clipboard.writeText(app.getTexts());
             };
 
