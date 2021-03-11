@@ -1,69 +1,13 @@
 {% extends "main.html" %}
 {% block title %}Image to text{% endblock %}
 {% block extrameta %}
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Copy text from image by selecting on image (Super simple). Extract text from any image/picture uploaded or pasted from clipboard. Mac / Windows / Android"/>
     <style type="text/css">
-     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
-        * {
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-            outline: none;
-            text-decoration: none;
-            list-style: none;
-        }
-        .btn {
-            font-family: Roboto;
-            font-weight: bold;
-            font-size: 1.125rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            border: none;
-            width: 162px;
-            height: 40px;
-            background: radial-gradient(75% 57.36% at 75% 73.33%, #545454 0%, #828282 100%);
-            box-shadow: -1px -1px 4px rgba(0, 0, 0, 0.15), 1px 1px 4px rgba(0, 0, 0, 0.5);          
-            border-radius: 1.875rem;
-            color: white;
-            cursor: pointer;
-        }
-        .btn-mid {
-            height: 30px;
-        }
-        .active-duo {
-            width: 67px;
-            height: 24px;
-            background: radial-gradient(75% 57.36% at 75% 73.33%, #BFBFBF 0%, #E2E2E2 100%);
-            border-radius: 30px;
-            color: black;
-            font-weight: 400;
-        }
-        .btn-round {
-            width: 30px;
-            height: 30px;
-        }
-        html, body {
-            font-family: 'Roboto', sans-serif;
-        }
-        #app {
-            margin: 4.56rem 0;
-            height: 100%;
-        }
-        .container {
-            position: relative;
-            max-width: 90vw;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            align-items: center;
-            margin: 0 auto;
-        }
         .input-upload {
             display: none;
+        }
+        .container {
+            margin-top: 2.688rem;
         }
         .dragging {
             position: absolute;

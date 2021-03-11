@@ -31,6 +31,10 @@ class ImageModalResp(BaseModel):
 @app.get("/")
 def read_root(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
+    
+@app.get("/about/")
+def about(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
 
 @app.post('/upload/')
 def upload(request: ImageModel): 
