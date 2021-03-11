@@ -44,7 +44,7 @@ def upload(request: ImageModel):
         api.Recognize()
         api.SetVariable("save_blob_choices","T")
         ri=api.GetIterator()
-        level=RIL.WORD
+        level=RIL.TEXTLINE
         boxes = api.GetComponentImages(RIL.TEXTLINE, True)
         text_list = []
         i = 0

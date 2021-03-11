@@ -14,3 +14,9 @@ curl -d @testreq.json -H 'Content-Type: application/json' http://127.0.0.1:8000/
 pipenv run uvicorn main:app --reload
 apt-get install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config
 ```
+tesseract 4.1.1
+
+test is tesseract work on your computer
+
+tesseract `absolute path to image(/home/ykorolikhin/Pictures/test_text.png)` stdout 
+
