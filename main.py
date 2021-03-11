@@ -38,33 +38,31 @@ def upload(request: ImageModel):
     buf = io.BytesIO(msg)
     image = Image.open(buf)
 
-    try:
-        with PyTessBaseAPI() as api:
-            api.SetImage(image)
-            api.Recognize()
-            api.SetVariable("save_blob_choices","T")
-            ri=api.GetIterator()
-            level=RIL.WORD
-            boxes = api.GetComponentImages(RIL.TEXTLINE, True)
-            text_list = []
-            i = 0
-            for r in iterate_level(ri, level):
-                symbol = r.GetUTF8Text(level)
-                conf = r.Confidence(level)
-                bbox = r.BoundingBoxInternal(level)
-                im = {
-                    "text": symbol,
-                    "left": bbox[0],
-                    "top": bbox[1],
-                    "width": bbox[2] - bbox[0],
-                    "height": bbox[3] - bbox[1],
-                }
-                
 
-                text_list.append(im)
-                i += 1
-    except:
-        raise Exception("no text")
+    with PyTessBaseAPI() as api:
+        api.SetImage(image)
+        api.Recognize()
+        api.SetVariable("save_blob_choices","T")
+        ri=api.GetIterator()
+        level=RIL.WORD
+        boxes = api.GetComponentImages(RIL.TEXTLINE, True)
+        text_list = []
+        i = 0
+        for r in iterate_level(ri, level):
+            symbol = r.GetUTF8Text(level)
+            conf = r.Confidence(level)
+            bbox = r.BoundingBoxInternal(level)
+            im = {
+                "text": symbol,
+                "left": bbox[0],
+                "top": bbox[1],
+                "width": bbox[2] - bbox[0],
+                "height": bbox[3] - bbox[1],
+            }
+            
+
+            text_list.append(im)
+            i += 1
     return {
         "texts": text_list,
     }
