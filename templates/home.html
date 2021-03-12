@@ -492,6 +492,14 @@
                     dragging.classList.add('hide');
                     return this;
                 },
+                showTextOnImg() {
+                    imgTexts.classList.remove('hide');
+                    return this;
+                },
+                hideTextOnImg() {
+                    imgTexts.classList.add('hide');
+                    return this;
+                }
             };
 
             var layouts = {
@@ -738,6 +746,9 @@
                     this.setImgToStorage();
                     var textParams = this.calcTextSizeParams();
 
+
+                    this.hideTextOnImg();
+
                     this.texts.forEach(function(text) {
                         if(inst.chechIsAnomalyRate('max', text.height, textParams)) text.height = textParams.popularH;
                         if(inst.chechIsAnomalyRate('min', text.height, textParams)) text.height = textParams.popularH;
@@ -748,6 +759,7 @@
 
                     setTimeout(function() {
                         inst.adjustFontSize('.text.notformated', 'p');
+                        this.showTextOnImg();
                     }, 0);
 
                     return this;
