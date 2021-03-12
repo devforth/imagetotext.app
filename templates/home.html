@@ -664,6 +664,9 @@
 
                     return this;
                 },
+                logger(data, id) {
+                    console.log(id, typeof data === 'object' ? JSON.stringify(data) : data);
+                }
             };
 
             var app = {
