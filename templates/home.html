@@ -457,6 +457,7 @@
             var dragging = container.querySelector('.dragging');
             var uploadSocial = container.querySelector('.upload-social-wrapper');
             var aboutLink = container.querySelector('.about-page');
+            var duoButton = container.querySelector('.duo-button');
 
             function callREST(img) {
                 return new Promise(function(resolve, reject) {
@@ -546,8 +547,8 @@
 
                     return this;
                 },
-                startUploadLayout(base64) {
-                    this.hideInitLayout().setBase64(base64).setImgSrc().setScaleContainer().showLoader();
+                startUploadLayout(base64, copyMode) {
+                    this.hideInitLayout().toogleCopyMode(copyMode).setBase64(base64).setImgSrc().setScaleContainer().showLoader();
                     return this;
                 },
                 endUploadLayout(texts) {
@@ -555,7 +556,7 @@
                     return this;
                 },
                 restoreInitLayout() {
-                    this.clearState().hideImageLayout().hideLoader().setImgToStorage().showInitLayout();
+                    this.clearState().hideImageLayout().hideLoader().setInfToStorage().showInitLayout();
                     return this;
                 },
             };
@@ -579,7 +580,7 @@
                         img.src = base64;
                     })
                 },
-                setImgToStorage() {
+                setInfToStorage() {
                     try {
                         localStorage.setItem('imgInf', JSON.stringify({
                             base64: this.base64,
@@ -591,7 +592,7 @@
                     }
                     return this;
                 },
-                getImgFromStorage() {
+                getInfFromStorage() {
                     try {
                         var base64 = JSON.parse(localStorage.getItem('imgInf'));
                     } catch (e) {
@@ -775,8 +776,19 @@
                         </button>
                     `;
                 },
-                toogleNewCopyModeHTML(type) {
+                copyModeHTML(type) {
                     return type === 'copy' ? `<div class="btn active-duo" data-type="copy">Copy</div>Google` : `Copy<div class="btn active-duo" data-type="google">Google</div>`
+                },
+                toogleCopyMode(type) {
+                    this.copyMode = type;
+
+                    this.setInfToStorage();
+
+                    duoButton.innerHTML = this.copyModeHTML(type);
+
+                    this.replaceTextButton(type);
+
+                    return this;
                 },
                 defineTypeButton(type, height) {
                     return type === 'copy' ? this.createCopyLineButtonHTML(height) : this.createGoogleSearchHTML(height);
@@ -789,16 +801,17 @@
                     </div>`;
                 },
                 replaceTextButton(type = 'copy') {
-                    var inst = app;
+                    var inst = this;
                     imgTexts.querySelectorAll('.text.notformated').forEach(function(line) {
                         var button = line.querySelector('.btn.text-btn');
                         var height = parseInt(button.style.height, 10);
                         button.remove();
 
-                        var newBtn = app.defineTypeButton(type, height);
+                        var newBtn = inst.defineTypeButton(type, height);
 
                         line.insertAdjacentHTML('beforeend', newBtn);
                     })
+                    return this;
                 },
                 createInputElement() {
                     var input = document.createElement('input');
@@ -828,7 +841,7 @@
                     if(this.texts.length === 1 && !this.texts[0].text.trim()) return this;
                     
                     var inst = this;
-                    this.setImgToStorage();
+                    this.setInfToStorage();
                     var textParams = this.calcTextSizeParams();
 
                     this.hideTextOnImg();
@@ -892,18 +905,12 @@
             }
 
             window.onToogleMode = function(e) {
-                var parent = e;
-                var btn = e.querySelector('div');
+                var btn = duoButton.querySelector('div');
                 var curType = btn.dataset.type;
+
                 var newType = curType === 'copy' ? 'google' : 'copy';
-                var newBtn = app.toogleNewCopyModeHTML(newType);
-                parent.innerHTML = newBtn;
 
-                app.copyMode = newType;
-
-                console.log(app);
-
-                app.replaceTextButton(newType);
+                app.toogleCopyMode(newType);
             }
 
             window.app = app;
@@ -912,11 +919,11 @@
                 navigator.clipboard.writeText(app.getTexts());
             };
 
-            var imgStorage = app.getImgFromStorage();
+            var imgStorage = app.getInfFromStorage();
 
             if(imgStorage && imgStorage.base64 && imgStorage.texts) {
                 app.copyMode = 'mode' in imgStorage && imgStorage.mode;
-                app.startUploadLayout(imgStorage.base64)
+                app.startUploadLayout(imgStorage.base64, app.copyMode)
                     .endUploadLayout(imgStorage.texts);          
             } else {
                 app.showInitLayout();
