@@ -10,6 +10,7 @@ pillow = "*"
 tesserocr = "*"
 jinja2 = "*"
 aiofiles = "*"
+opencv-python = "*"
 
 [dev-packages]
 
