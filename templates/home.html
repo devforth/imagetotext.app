@@ -52,6 +52,19 @@
             white-space: nowrap;
             font-size: 100%;
         }
+        .text:hover .text-btn {
+            opacity: 1;
+        }
+        .text-btn {
+            opacity: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: 0.3s;
+        }
+        .text-btn[data-google] {
+            background: radial-gradient(75% 57.36% at 75% 73.33%, #E2E2E2 0%, #FFFFFF 100%);
+        }
         .subtitle {
             margin-top: 1.5rem;
             font-size: 1.2rem;
@@ -289,7 +302,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="btn btn-mid">Copy<div class="btn active-duo">Google</div></div>
+                <div class="btn btn-mid duo-button" onclick="onToogleMode(this)"><div class="btn active-duo" data-type="copy">Copy</div>Google</div>
             </div>
             <div class="content">
                 <img src="" class="img img-paste hide" />
@@ -327,7 +340,7 @@
                             </defs>
                         </svg>
                     </h1>
-                     <h2 class="subtitle">Copy text from image</h2>
+                    <h2 class="subtitle">Copy text from image</h2>
                     <h2 class="subtitle">Transform image to text by Ctrl+V and copy text in one click</h2>
                 </div>
 
@@ -571,6 +584,7 @@
                         localStorage.setItem('imgInf', JSON.stringify({
                             base64: this.base64,
                             texts: this.texts,
+                            mode: this.copyMode,
                         }));
                     } catch (e) {
                         console.log(e);
@@ -679,6 +693,7 @@
                 containerWidth: null,
                 isLoading: false,
                 anomalyRate: 10,
+                copyMode: 'copy',
                 ...hideAndShowElm,
                 ...layouts,
                 ...utils,
@@ -716,8 +731,74 @@
                 getTexts() {
                     return imgTexts.textContent.trim();
                 },
+                createCopyLineButtonHTML(height) {
+                    //var id = Date.now() + '-' + height + '-' + Math.random() * 100;
+                    return `<button style="height: ${height}px; width: ${height}px;right: ${-height - 2}px" class="btn text-btn" onclick="onCopyLineClick(this);" data-copy="copy">
+                            <svg width="${height - 5}" height="${height - 5}" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g filter="url(#filter0_d19)">
+                                    <path d="M12.8462 6.5H7.65385C7.01659 6.5 6.5 7.01659 6.5 7.65385V12.8462C6.5 13.4834 7.01659 14 7.65385 14H12.8462C13.4834 14 14 13.4834 14 12.8462V7.65385C14 7.01659 13.4834 6.5 12.8462 6.5Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M3.73077 9.5H3.15385C2.84783 9.5 2.55434 9.37843 2.33795 9.16205C2.12157 8.94566 2 8.65217 2 8.34615V3.15385C2 2.84783 2.12157 2.55434 2.33795 2.33795C2.55434 2.12157 2.84783 2 3.15385 2H8.34615C8.65217 2 8.94566 2.12157 9.16205 2.33795C9.37843 2.55434 9.5 2.84783 9.5 3.15385V3.73077" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </g>
+                                <defs>
+                                <filter id="filter0_d19" x="0.5" y="0.5" width="16" height="16" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                    <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+                                    <feOffset dx="0.5" dy="0.5"/>
+                                    <feGaussianBlur stdDeviation="0.5"/>
+                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0"/>
+                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+                                </filter>
+                                </defs>
+                            </svg>
+                        </button>
+                    `;
+                },
+                createGoogleSearchHTML(height) {
+                    return `<button style="height: ${height}px; width: ${height}px;right: ${-height - 2}px" class="btn text-btn" onclick="onGoogleSearch(this);" data-google="google">
+                                <svg width="${height - 5}" height="${height - 5}" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g filter="url(#filter0_d20)">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M5.07996 4.4285V5.8H7.34846C7.25696 6.3885 6.66346 7.525 5.07996 7.525C3.71496 7.525 2.59996 6.395 2.59996 5C2.59996 3.605 3.71496 2.475 5.07996 2.475C5.85696 2.475 6.37696 2.805 6.67496 3.0915L7.75996 2.0455C7.06296 1.395 6.15996 1 5.07996 1C2.86846 1 1.07996 2.7885 1.07996 5C1.07996 7.2115 2.86846 9 5.07996 9C7.38846 9 8.91996 7.377 8.91996 5.0915C8.91996 4.8285 8.89146 4.6285 8.85696 4.4285H5.07996Z" fill="#4285F4"/>
+                                    </g>
+                                    <defs>
+                                        <filter id="filter0_d20" x="0.5" y="0.5" width="10" height="10" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                            <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                            <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+                                            <feOffset dx="0.5" dy="0.5"/>
+                                            <feGaussianBlur stdDeviation="0.5"/>
+                                            <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.4 0"/>
+                                            <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+                                            <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+                                        </filter>
+                                    </defs>
+                                </svg>
+                        </button>
+                    `;
+                },
+                toogleNewCopyModeHTML(type) {
+                    return type === 'copy' ? `<div class="btn active-duo" data-type="copy">Copy</div>Google` : `Copy<div class="btn active-duo" data-type="google">Google</div>`
+                },
+                defineTypeButton(type, height) {
+                    return type === 'copy' ? this.createCopyLineButtonHTML(height) : this.createGoogleSearchHTML(height);
+                },
                 createTextHTML({text, top, left, width, height}) {
-                    return `<div class="text notformated" style="position: absolute;top:${top}px; left:${left}px;line-height:0.9; width:${width}px; height:${height}px;backdrop-filter: blur(3px);"><p style="font-size:${height}px; white-space: nowrap; display: inline-block;">${text}</p></div>`;
+                    var inst = this;
+                    return `<div class="text notformated" style="position: absolute;top:${top}px; left:${left}px;line-height:0.9; width:${width}px; height:${height}px;backdrop-filter: blur(3px);">
+                        <p style="font-size:${height}px; white-space: nowrap; display: inline-block;">${text}</p>
+                        ${inst.defineTypeButton(inst.copyMode, height)}
+                    </div>`;
+                },
+                replaceTextButton(type = 'copy') {
+                    var inst = app;
+                    imgTexts.querySelectorAll('.text.notformated').forEach(function(line) {
+                        var button = line.querySelector('.btn.text-btn');
+                        var height = parseInt(button.style.height, 10);
+                        button.remove();
+
+                        var newBtn = app.defineTypeButton(type, height);
+
+                        line.insertAdjacentHTML('beforeend', newBtn);
+                    })
                 },
                 createInputElement() {
                     var input = document.createElement('input');
@@ -800,6 +881,31 @@
                 container.append(input);
             }
 
+            window.onCopyLineClick = function(e) {
+                var text = e.previousElementSibling.textContent.trim();
+                navigator.clipboard.writeText(text)
+            }
+
+            window.onGoogleSearch = function(e) {
+                var text = e.previousElementSibling.textContent.trim();
+                var newW = window.open('https://www.google.com/?q='+text);
+            }
+
+            window.onToogleMode = function(e) {
+                var parent = e;
+                var btn = e.querySelector('div');
+                var curType = btn.dataset.type;
+                var newType = curType === 'copy' ? 'google' : 'copy';
+                var newBtn = app.toogleNewCopyModeHTML(newType);
+                parent.innerHTML = newBtn;
+
+                app.copyMode = newType;
+
+                console.log(app);
+
+                app.replaceTextButton(newType);
+            }
+
             window.app = app;
 
             window.copyText = function() {
@@ -809,6 +915,7 @@
             var imgStorage = app.getImgFromStorage();
 
             if(imgStorage && imgStorage.base64 && imgStorage.texts) {
+                app.copyMode = 'mode' in imgStorage && imgStorage.mode;
                 app.startUploadLayout(imgStorage.base64)
                     .endUploadLayout(imgStorage.texts);          
             } else {
