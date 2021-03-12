@@ -459,7 +459,7 @@
                             return;
                         }
                         response.json().then(json => {
-                           resolve(json)
+                            resolve(json)
                         });
                     })
                 })
@@ -538,7 +538,7 @@
                     return this;
                 },
                 endUploadLayout(texts) {
-                    app.setTexts(texts).insertText().hideLoader();
+                    this.setTexts(texts).insertText().hideLoader();
                     return this;
                 },
                 restoreInitLayout() {
@@ -614,11 +614,13 @@
                     var popularH = this.texts.sort((a,b) =>
                         this.texts.filter(v => v.height=== a.height).length
                         - this.texts.filter(v => v.height === b.height).length
-                    ).pop().height;
+                    )
+
+                    popularH = popularH[popularH.length - 1].height;
 
                     var maxRate = maxH / popularH;
                     var minRate = popularH / minH;
-
+                    
                     return  { 
                         maxH, 
                         averageH,
@@ -742,17 +744,15 @@
                     if(this.texts.length === 1 && !this.texts[0].text.trim()) return this;
                     
                     var inst = this;
-
                     this.setImgToStorage();
                     var textParams = this.calcTextSizeParams();
-
 
                     this.hideTextOnImg();
 
                     this.texts.forEach(function(text) {
                         if(inst.chechIsAnomalyRate('max', text.height, textParams)) text.height = textParams.popularH;
                         if(inst.chechIsAnomalyRate('min', text.height, textParams)) text.height = textParams.popularH;
-                        console.log(text);
+        
                         var html = inst.createTextHTML(text);
                         imgTexts.insertAdjacentHTML('beforeend', html);
                     });
