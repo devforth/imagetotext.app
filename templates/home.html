@@ -845,17 +845,21 @@
                     if(this.texts.length === 1 && !this.texts[0].text.trim()) return this;
                     
                     var inst = this;
-                    this.setInfToStorage();
-                    var textParams = this.calcTextSizeParams();
 
+                    this.setInfToStorage();
+                    
+                    var textParams = this.calcTextSizeParams();
+   
                     this.hideTextOnImg();
 
                     this.texts.forEach(function(text) {
                         if(inst.chechIsAnomalyRate('max', text.height, textParams)) text.height = textParams.popularH;
                         if(inst.chechIsAnomalyRate('min', text.height, textParams)) text.height = textParams.popularH;
-        
-                        var html = inst.createTextHTML(text);
-                        imgTexts.insertAdjacentHTML('beforeend', html);
+                
+                        if(text.text.trim()) {
+                            var html = inst.createTextHTML(text);
+                            imgTexts.insertAdjacentHTML('beforeend', html);
+                        }
                     });
 
                     setTimeout(function() {
