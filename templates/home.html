@@ -50,6 +50,7 @@
         }
         .text {
             white-space: nowrap;
+            font-size: 100%;
         }
         .subtitle {
             margin-top: 1.5rem;
@@ -629,6 +630,16 @@
                             return inst.calcScale(sizeOrig);
                         });
                 },
+                adjustFontSize(parentBlock, childBlock) {
+                    document.querySelectorAll(parentBlock).forEach(function(parent) {
+                        var needWidth = parent.clientWidth
+                        var child = parent.querySelector(childBlock)
+                        var currentWidth = child.clientWidth;
+                        var fs = child.style.fontSize.replace('px','');
+                        var rate = needWidth / currentWidth;
+                        child.style.fontSize = fs * rate + 'px';
+                    });
+                },
                 chechIsAnomalyRate(type, textHeight, textParams) {
                     return Boolean(textParams[`${type}Rate`] >= this.anomalyRate && textParams[`${type}H`] === textHeight)
                 },
@@ -693,7 +704,7 @@
                     return imgTexts.textContent.trim();
                 },
                 createTextHTML({text, top, left, width, height}) {
-                    return `<div class="text" style="position: absolute;top:${top}px; left:${left}px; font-size:${height}px;width:${width}px; height:${height}px;backdrop-filter: blur(3px);">${text}&nbsp;</div>`;
+                    return `<div class="text notformated" style="position: absolute;top:${top}px; left:${left}px;line-height:0.9; width:${width}px; height:${height}px;backdrop-filter: blur(3px);"><p style="font-size:${height}px; white-space: nowrap; display: inline-block;">${text}</p></div>`;
                 },
                 createInputElement() {
                     var input = document.createElement('input');
@@ -734,6 +745,10 @@
                         var html = inst.createTextHTML(text);
                         imgTexts.insertAdjacentHTML('beforeend', html);
                     });
+
+                    setTimeout(function() {
+                        inst.adjustFontSize('.text.notformated', 'p');
+                    }, 0);
 
                     return this;
                 },
