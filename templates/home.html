@@ -2,12 +2,19 @@
 {% block title %}Image to text{% endblock %}
 {% block extrameta %}
     <meta name="description" content="Copy text from image by selecting on image (Super simple). Extract text from any image/picture uploaded or pasted from clipboard. Mac / Windows / Android"/>
+    <meta property="og:title" content="ImageToText"/>
+    <meta property="og:description" content="Copy text from image by selecting on image (Super simple). Extract text from any image/picture uploaded or pasted from clipboard. Mac / Windows / Android">
+    <meta property="og:url" content="https://imagetotext.app/about/"/>
+    <meta property="og:type" content="imagetotext" />
+    <meta property="og:image" content="https://s.hinty.io/imgorig/cAPm3HpU5fzZRtkeDxkBhi.jpeg?11"/>
+    <link rel="canonical" href="https://imagetotext.app/">
     <style type="text/css">
         .input-upload {
             display: none;
         }
         .container {
             margin-top: 2.313rem;
+            color: #444444;
         }
         .dragging {
             position: absolute;
@@ -36,9 +43,6 @@
             color: black;
             font-weight: 400;
             text-align: left;
-        }
-        .title svg {
-            margin-left: 1rem;
         }
         .img-paste {
             height: 100%;
@@ -69,7 +73,6 @@
             margin-top: 1.5rem;
             font-size: 1.2rem;
             line-height: 1.2rem;
-            color: black;
             font-weight: 400;
             text-align: left;
         }
@@ -84,7 +87,6 @@
             flex-direction: column;
             align-items: center;
             font-size: 1.5rem;
-            color: black;
             font-weight: 400;
         }
         .upload-title {
@@ -95,7 +97,6 @@
         }
         .bold-underline[class] {
             font-weight: 400;
-            color: black;
             margin-top: 2.313rem;
             text-decoration: underline;
             cursor: pointer;
@@ -308,8 +309,7 @@
                 <img src="" class="img img-paste hide" />
                 <div class="img-with-texts hide"></div>
                 <div class="container-header hide">
-                    <h1 class="title">
-                        Image to text app 
+                    <a href="https://imagetotext.app/" class="title">
                         <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g filter="url(#filter0_d45)">
                                 <rect x="5" y="5" width="40" height="40" rx="2" fill="white"/>
@@ -339,9 +339,13 @@
                                 </filter>
                             </defs>
                         </svg>
-                    </h1>
+                        Image to text app 
+                    </a>
                     <h2 class="subtitle">Copy text from image</h2>
-                    <h2 class="subtitle">Transform image to text by Ctrl+V and copy text in one click</h2>
+                    <p class="subtitle">
+                        Transform image to text by Ctrl+V and copy text in one click.
+                        Simpler then ever. Works on Mac, Androd or PC
+                    </p>
                 </div>
 
                 <div class="upload-wrapper hide">
@@ -358,7 +362,7 @@
                     </div>
                 </div>
                 <div class="footer-social-wrapper upload-social-wrapper">
-                    <span>SHARE</span>
+                    <span>SHARE WITH OTHERS OR SAVE BOOKMARK</span>
                     <div class="footer-item footer-social-share">
                         <div class="btn btn-round" onclick="window.open('https:\/\/www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://imagetotext.app/') + '&t=' + encodeURIComponent(`Image To Text Simple Copy`));">
                             <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -847,7 +851,7 @@
                     var inst = this;
 
                     this.setInfToStorage();
-                    
+
                     var textParams = this.calcTextSizeParams();
    
                     this.hideTextOnImg();

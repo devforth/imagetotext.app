@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
     <style type="text/css">
-     @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
         * {
             padding: 0;
             margin: 0;
@@ -42,11 +42,12 @@
             border: none;
             width: 162px;
             height: 40px;
-            background: radial-gradient(75% 57.36% at 75% 73.33%, #545454 0%, #828282 100%);
+            background: linear-gradient(360deg, #22507A 0%, #4D7DC6 100%);
             box-shadow: -1px -1px 4px rgba(0, 0, 0, 0.15), 1px 1px 4px rgba(0, 0, 0, 0.5);          
             border-radius: 1.875rem;
             color: white;
             cursor: pointer;
+            z-index: 10000;
         }
         .btn-mid {
             height: 30px;
