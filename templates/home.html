@@ -752,14 +752,14 @@
                     this.texts.forEach(function(text) {
                         if(inst.chechIsAnomalyRate('max', text.height, textParams)) text.height = textParams.popularH;
                         if(inst.chechIsAnomalyRate('min', text.height, textParams)) text.height = textParams.popularH;
-                    
+                        console.log(text);
                         var html = inst.createTextHTML(text);
                         imgTexts.insertAdjacentHTML('beforeend', html);
                     });
 
                     setTimeout(function() {
                         inst.adjustFontSize('.text.notformated', 'p');
-                        this.showTextOnImg();
+                        inst.showTextOnImg();
                     }, 0);
 
                     return this;
