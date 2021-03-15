@@ -106,12 +106,9 @@
         </div>
        <script src="https://cdnjs.cloudflare.com/ajax/libs/zooming/2.1.1/zooming.min.js" crossorigin="anonymous" async defer></script>
        <script async defer>
-           document.addEventListener('DOMContentLoaded', function () {
-              const zooming = new Zooming({
-                // options...
-              })
-
-              zooming.listen('.img-zoomable')
+           window.addEventListener('load', function () {
+              const zooming = new Zooming({});
+              zooming.listen('.img-zoomable');
            });
        </script>
    </main>
