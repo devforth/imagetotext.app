@@ -329,9 +329,9 @@
                 <div class="container-header hide">
                     <a href="https://imagetotext.app/" class="title">
                         <img loading="lazy" src="/static/logo.svg" alt="site logo" />
-                        <h1>Image to text app</h1> 
+                        <h1>Imagetotext.app</h1> 
                     </a>
-                    <h2 class="subtitle">Copy text from image</h2>
+                    <h2 class="subtitle">Copy text from image (Image to text)</h2>
                     <p class="subtitle">
                         Transform image to text by Ctrl+V and copy text in one click.
                         Simpler then ever. Works on Mac, Androd or PC
@@ -527,6 +527,8 @@
                 },
                 createTextHTML({text, top, left, width, height}) {
                     var inst = this;
+                    // correction example
+                    var text = text.replace('T| Imagetotext.app', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Imagetotext.app');
                     return `<div class="text notformated" style="position: absolute;top:${top}px; left:${left}px;line-height:0.9; width:${width}px; height:${height}px;backdrop-filter: blur(3px);">
                         <p style="font-size:${height}px; white-space: nowrap; display: inline-block;">${text}</p>
                         ${inst.defineTypeButton(inst.copyMode, height)}
