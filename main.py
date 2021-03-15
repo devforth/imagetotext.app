@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse, FileResponse, HTMLResponse
 
 import base64
 import io
@@ -14,7 +15,7 @@ Image.MAX_IMAGE_PIXELS=1000000000
 from tesserocr import PyTessBaseAPI, RIL, iterate_level, PSM, OEM
 
 
-
+folder = 'static/'
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static", html=True), name="static")
@@ -29,6 +30,7 @@ class ImageItemResp(BaseModel):
     top: int
 class ImageModalResp(BaseModel):
     texts: List[ImageItemResp]
+
 
 @app.get("/")
 def read_root(request: Request):
