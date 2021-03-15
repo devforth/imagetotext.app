@@ -58,6 +58,11 @@
             flex-direction: column;
             align-items: flex-start;
         }
+        #github-badge {
+            position: fixed;
+            top: 0;
+            right: 0;
+        }
         .title {
             display: flex;
             align-items: center;
@@ -270,21 +275,8 @@
                             </svg>
                         </div>
                         <div class="btn btn-round" onclick="window.open('https:\/\/twitter.com/intent/tweet?text=' + ' %20 ' + encodeURIComponent('https://imagetotext.app/')); return false;">
-                            <svg width="23" height="21" viewBox="0 0 23 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g filter="url(#filter0_d6)">
-                                    <path d="M19 4.28697C18.3854 4.55951 17.725 4.7437 17.0319 4.82654C17.7394 4.40244 18.2827 3.73091 18.5385 2.93078C17.8765 3.32342 17.1431 3.6086 16.3626 3.76231C15.7375 3.09634 14.847 2.68018 13.8614 2.68018C11.9689 2.68018 10.4347 4.2144 10.4347 6.10674C10.4347 6.3753 10.465 6.63684 10.5234 6.88763C7.67553 6.74473 5.15064 5.38053 3.46057 3.30741C3.16561 3.81351 2.99663 4.40213 2.99663 5.03011C2.99663 6.21891 3.60163 7.26775 4.52108 7.88222C3.95933 7.86444 3.431 7.7103 2.96895 7.45365C2.96871 7.46795 2.96871 7.4823 2.96871 7.49672C2.96871 9.15698 4.14988 10.5419 5.71745 10.8567C5.42989 10.935 5.12718 10.9769 4.81463 10.9769C4.59384 10.9769 4.37916 10.9554 4.16998 10.9154C4.60599 12.2768 5.87147 13.2675 7.37093 13.2951C6.19819 14.2142 4.72066 14.762 3.11527 14.762C2.83871 14.762 2.56593 14.7458 2.29785 14.7141C3.81429 15.6864 5.61549 16.2536 7.5506 16.2536C13.8534 16.2536 17.3 11.0322 17.3 6.50409C17.3 6.35551 17.2967 6.20773 17.2901 6.0608C17.9596 5.57768 18.5406 4.97414 19 4.28697Z" fill="white"/>
-                                </g>
-                                <defs>
-                                    <filter id="filter0_d6" x="0.297852" y="0.680176" width="22.7021" height="19.5734" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
-                                        <feOffset dx="1" dy="1"/>
-                                        <feGaussianBlur stdDeviation="1.5"/>
-                                        <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-                                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
-                                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
-                                    </filter>
-                                </defs>
+                            <svg width="17" height="14" viewBox="0 0 17 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.7021 1.6068C16.0876 1.87933 15.4272 2.06353 14.734 2.14637C15.4415 1.72226 15.9848 1.05073 16.2407 0.250602C15.5786 0.643245 14.8453 0.928425 14.0648 1.08213C13.4397 0.416163 12.5491 0 11.5636 0C9.67109 0 8.13681 1.53422 8.13681 3.42657C8.13681 3.69513 8.16717 3.95667 8.22558 4.20745C5.37768 4.06456 2.85278 2.70036 1.16272 0.627238C0.86776 1.13333 0.698778 1.72196 0.698778 2.34993C0.698778 3.53873 1.30378 4.58757 2.22322 5.20204C1.66148 5.18426 1.13315 5.03013 0.671103 4.77348C0.670859 4.78777 0.670859 4.80213 0.670859 4.81655C0.670859 6.4768 1.85202 7.86177 3.4196 8.17652C3.13204 8.25484 2.82932 8.29669 2.51677 8.29669C2.29599 8.29669 2.08131 8.27525 1.87212 8.23523C2.30814 9.59662 3.57362 10.5873 5.07307 10.615C3.90034 11.534 2.42281 12.0818 0.81742 12.0818C0.540853 12.0818 0.268075 12.0656 0 12.034C1.51644 13.0062 3.31764 13.5734 5.25275 13.5734C11.5556 13.5734 15.0022 8.35204 15.0022 3.82391C15.0022 3.67534 14.9989 3.52755 14.9923 3.38062C15.6617 2.8975 16.2427 2.29397 16.7021 1.6068Z" fill="white"/>
                             </svg>
                         </div>
                         <div class="btn btn-round" onclick="window.open('https:\/\/reddit.com/submit/?url=' + encodeURIComponent('https://imagetotext.app/')); + '&amp'; return false;">
@@ -415,23 +407,10 @@
                             </svg>
                         </div>
                         <div class="btn btn-round" onclick="window.open('https:\/\/twitter.com/intent/tweet?text=' + ' %20 ' + encodeURIComponent('https://imagetotext.app/')); return false;">
-                            <svg width="23" height="21" viewBox="0 0 23 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g filter="url(#filter0_d2)">
-                                    <path d="M19 4.28697C18.3854 4.55951 17.725 4.7437 17.0319 4.82654C17.7394 4.40244 18.2827 3.73091 18.5385 2.93078C17.8765 3.32342 17.1431 3.6086 16.3626 3.76231C15.7375 3.09634 14.847 2.68018 13.8614 2.68018C11.9689 2.68018 10.4347 4.2144 10.4347 6.10674C10.4347 6.3753 10.465 6.63684 10.5234 6.88763C7.67553 6.74473 5.15064 5.38053 3.46057 3.30741C3.16561 3.81351 2.99663 4.40213 2.99663 5.03011C2.99663 6.21891 3.60163 7.26775 4.52108 7.88222C3.95933 7.86444 3.431 7.7103 2.96895 7.45365C2.96871 7.46795 2.96871 7.4823 2.96871 7.49672C2.96871 9.15698 4.14988 10.5419 5.71745 10.8567C5.42989 10.935 5.12718 10.9769 4.81463 10.9769C4.59384 10.9769 4.37916 10.9554 4.16998 10.9154C4.60599 12.2768 5.87147 13.2675 7.37093 13.2951C6.19819 14.2142 4.72066 14.762 3.11527 14.762C2.83871 14.762 2.56593 14.7458 2.29785 14.7141C3.81429 15.6864 5.61549 16.2536 7.5506 16.2536C13.8534 16.2536 17.3 11.0322 17.3 6.50409C17.3 6.35551 17.2967 6.20773 17.2901 6.0608C17.9596 5.57768 18.5406 4.97414 19 4.28697Z" fill="white"/>
-                                </g>
-                            <defs>
-                                <filter id="filter0_d2" x="0.297852" y="0.680176" width="22.7021" height="19.5734" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                                    <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
-                                    <feOffset dx="1" dy="1"/>
-                                    <feGaussianBlur stdDeviation="1.5"/>
-                                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-                                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
-                                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
-                                </filter>
-                                </defs>
+                            <svg width="17" height="14" viewBox="0 0 17 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16.7021 1.6068C16.0876 1.87933 15.4272 2.06353 14.734 2.14637C15.4415 1.72226 15.9848 1.05073 16.2407 0.250602C15.5786 0.643245 14.8453 0.928425 14.0648 1.08213C13.4397 0.416163 12.5491 0 11.5636 0C9.67109 0 8.13681 1.53422 8.13681 3.42657C8.13681 3.69513 8.16717 3.95667 8.22558 4.20745C5.37768 4.06456 2.85278 2.70036 1.16272 0.627238C0.86776 1.13333 0.698778 1.72196 0.698778 2.34993C0.698778 3.53873 1.30378 4.58757 2.22322 5.20204C1.66148 5.18426 1.13315 5.03013 0.671103 4.77348C0.670859 4.78777 0.670859 4.80213 0.670859 4.81655C0.670859 6.4768 1.85202 7.86177 3.4196 8.17652C3.13204 8.25484 2.82932 8.29669 2.51677 8.29669C2.29599 8.29669 2.08131 8.27525 1.87212 8.23523C2.30814 9.59662 3.57362 10.5873 5.07307 10.615C3.90034 11.534 2.42281 12.0818 0.81742 12.0818C0.540853 12.0818 0.268075 12.0656 0 12.034C1.51644 13.0062 3.31764 13.5734 5.25275 13.5734C11.5556 13.5734 15.0022 8.35204 15.0022 3.82391C15.0022 3.67534 14.9989 3.52755 14.9923 3.38062C15.6617 2.8975 16.2427 2.29397 16.7021 1.6068Z" fill="white"/>
                             </svg>
-                        </div>
+                            </div>
                         <div class="btn btn-round" onclick="window.open('https:\/\/reddit.com/submit/?url=' + encodeURIComponent('https://imagetotext.app/')); + '&amp'; return false;">
                             <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g filter="url(#filter0_d3)">
@@ -473,6 +452,7 @@
                 </div>
                 <a href="/about/" class="bold-underline about-page hide">More info</a>
             </div>
+            <a id="github-badge" href="https://github.com/devforth/imagetotext.app"><img loading="lazy" width="149" height="149" src="/static/github.png" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
         </div>
     </main>
 
@@ -589,7 +569,8 @@
                     return this;
                 },
                 startUploadLayout(base64, copyMode) {
-                    this.hideInitLayout().toogleCopyMode(copyMode || app.copyMode).setBase64(base64).setImgSrc().setScaleContainer().showLoader();
+                    this.hideInitLayout().toogleCopyMode(copyMode || app.copyMode
+                    ).setBase64(base64).setImgSrc().setScaleContainer().showLoader();
                     return this;
                 },
                 endUploadLayout(texts) {
