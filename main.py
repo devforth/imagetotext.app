@@ -18,7 +18,7 @@ from tesserocr import PyTessBaseAPI, RIL, iterate_level, PSM, OEM
 folder = 'static/'
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 class ImageModel(BaseModel):
     base64: str
