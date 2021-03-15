@@ -54,7 +54,37 @@ server {
 ```
 
 
-# Test backend locally
+
+
+# Run dev autorelaod server locally
+
+Tested on Ubuntu 20.04 (Native and [WSL 2](https://hinty.io/ivictbor/simple-way-to-docker-on-windows-10-home-with-wsl-2/)):
+
+1\. Install deps
+
+
+```
+apt install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config
+```
+
+>  ⚠ Do this before `pipenv sync`
+
+
+Tesseract should have version `4.1.1+`.
+
+2\. Then enter a repo dir and do:
+
+```
+pipenv sync
+```
+
+3\. Run app:
+
+```
+pipenv run uvicorn main:app --reload
+```
+
+# Testing and troubleshooting
 
 ```
 curl -d '{"base64":"baeldung"}' -H 'Content-Type: application/json' http://127.0.0.1:8000/upload/
@@ -66,37 +96,14 @@ Or paste same JSON in `testreq.json` file and run:
 curl -d @testreq.json -H 'Content-Type: application/json' http://127.0.0.1:8000/upload/
 ```
 
-
-
-# Run locally
-
-Tested on Ubuntu 20.04 (Native and [WSL 2](https://hinty.io/ivictbor/simple-way-to-docker-on-windows-10-home-with-wsl-2/)):
-
-1\. Install deps
-
->  ⚠ Do this before `pipenv sync`
-
-```
-apt install tesseract-ocr libtesseract-dev libleptonica-dev pkg-config
-```
-
-Tesseract should have version 4.1.1+. To test that tesseract work on your computer
+To test only tesseract on your computer:
 
 ```
 tesseract `absolute path to any image with text (/home/ykorolikhin/Pictures/test_text.png)` stdout 
 ```
 
-2\. Then enter a repo dir and do:
 
-```
-pipenv sync
-```
 
-3\.Run app:
-
-```
-pipenv run uvicorn main:app --reload
-```
 
 
 
