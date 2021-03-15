@@ -12,6 +12,26 @@
         .input-upload {
             display: none;
         }
+        .message {
+            position: absolute;
+            max-width: 281px;
+            right: -15%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #FFFFFF;
+            box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            z-index: 1000;
+        }
+        .message .message-text {
+            width: fit-content;
+            white-space: pre-line;
+        }
+        .message button.btn {
+            margin-left: 1rem;
+        }
         .container {
             margin-top: 2.313rem;
             color: #444444;
@@ -306,6 +326,10 @@
                 <div class="btn btn-mid duo-button" onclick="onToogleMode(this)"><div class="btn active-duo" data-type="copy">Copy</div>Google</div>
             </div>
             <div class="content">
+                <div class="message hide">
+                    <div class="message-text"></div>
+                    <button class="btn btn-round">&times;</button>
+                </div>
                 <img src="" class="img img-paste hide" />
                 <div class="img-with-texts hide"></div>
                 <div class="container-header hide">
@@ -462,6 +486,7 @@
             var uploadSocial = container.querySelector('.upload-social-wrapper');
             var aboutLink = container.querySelector('.about-page');
             var duoButton = container.querySelector('.duo-button');
+            var message = container.querySelector('.message');
 
             function callREST(img) {
                 return new Promise(function(resolve, reject) {
@@ -517,7 +542,16 @@
                 hideTextOnImg() {
                     imgTexts.classList.add('hide');
                     return this;
-                }
+                },
+                showMessage(text) {
+                    message.classList.remove('hide');
+                    message.querySelector('.message-text').innerHTML = text.trim();
+                    return this;
+                },
+                hideMessage(text) {
+                    message.classList.add('hide');
+                    return this;
+                },
             };
 
             var layouts = {
@@ -552,7 +586,7 @@
                     return this;
                 },
                 startUploadLayout(base64, copyMode) {
-                    this.hideInitLayout().toogleCopyMode(copyMode).setBase64(base64).setImgSrc().setScaleContainer().showLoader();
+                    this.hideInitLayout().toogleCopyMode(copyMode || app.copyMode).setBase64(base64).setImgSrc().setScaleContainer().showLoader();
                     return this;
                 },
                 endUploadLayout(texts) {
@@ -753,7 +787,14 @@
                 },
                 logger(data, id) {
                     console.log(id, typeof data === 'object' ? JSON.stringify(data) : data);
-                }
+                },
+                hideMessageWithInterval(t = 2000) {
+                    var inst = this;
+                    setTimeout(function() {
+                        inst.hideMessage();
+                    }, t);
+                    return this;
+                },
             };
 
             var app = {
@@ -888,6 +929,7 @@
 
             window.onCopyLink = function() {
                 navigator.clipboard.writeText(document.URL);
+                app.showMessage('Link copied to clipboard').hideMessageWithInterval();
             };
 
             window.onUploadClick = function() {
@@ -908,7 +950,8 @@
 
             window.onCopyLineClick = function(e) {
                 var text = e.previousElementSibling.textContent.trim();
-                navigator.clipboard.writeText(text)
+                navigator.clipboard.writeText(text);
+                app.showMessage('“Copy text from image”<br/>Copied to clipboard').hideMessageWithInterval();
             }
 
             window.onGoogleSearch = function(e) {
