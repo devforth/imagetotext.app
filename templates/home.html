@@ -4,7 +4,7 @@
     <meta name="description" content="Copy text from image by selecting on image (Super simple). Extract text from any image/picture uploaded or pasted from clipboard. Mac / Windows / Android"/>
     <meta property="og:title" content="ImageToText"/>
     <meta property="og:description" content="Copy text from image by selecting on image (Super simple). Extract text from any image/picture uploaded or pasted from clipboard. Mac / Windows / Android">
-    <meta property="og:url" content="https://imagetotext.app/about/"/>
+    <meta property="og:url" content="https://imagetotext.app/"/>
     <meta property="og:type" content="imagetotext" />
     <meta property="og:image" content="https://imagetotext.app/static/preview.png"/>
 
@@ -824,7 +824,7 @@
             window.onCopyLineClick = function(e) {
                 var text = e.previousElementSibling.textContent.trim();
                 navigator.clipboard.writeText(text);
-                app.showMessage('“Copy text from image”<br/>Copied to clipboard').hideMessageWithInterval();
+                app.showMessage('Text copied to clipboard').hideMessageWithInterval();
             }
 
             window.onGoogleSearch = function(e) {
