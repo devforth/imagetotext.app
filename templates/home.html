@@ -35,6 +35,7 @@
         .container {
             margin-top: 2.313rem;
             color: #444444;
+            padding: 0 1rem;
         }
         .duo-button {
             max-width: 126px;
@@ -238,6 +239,19 @@
             }
             100% {
                 transform: rotate(360deg);
+            }
+        }
+        @media (max-width: 474px) {
+            .img-with-text-footer {
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .img-with-text-footer .footer-social-wrapper {
+                margin: 20px 0;
+            }
+            .footer-social-share {
+                margin-top: 0.2rem;
             }
         }
     </style>
