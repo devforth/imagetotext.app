@@ -2,6 +2,7 @@ from typing import Optional, List
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 
 import base64
 import io
@@ -16,6 +17,7 @@ from tesserocr import PyTessBaseAPI, RIL, iterate_level, PSM, OEM
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 class ImageModel(BaseModel):
     base64: str

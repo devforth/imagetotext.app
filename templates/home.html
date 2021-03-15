@@ -727,11 +727,14 @@
                 adjustFontSize(parentBlock, childBlock) {
                     document.querySelectorAll(parentBlock).forEach(function(parent) {
                         var needWidth = parent.clientWidth
+                        var parentH = parent.clientHeight;
                         var child = parent.querySelector(childBlock)
                         var currentWidth = child.clientWidth;
                         var fs = child.style.fontSize.replace('px','');
                         var rate = needWidth / currentWidth;
-                        child.style.fontSize = fs * rate + 'px';
+                        var newFs = fs * rate;
+                        var fsBigH = (newFs * 100 / parentH) - 100;
+                        child.style.fontSize = fsBigH > 50 ? parentH + 'px' : newFs + 'px';
                     });
                 },
                 chechIsAnomalyRate(type, textHeight, textParams) {
