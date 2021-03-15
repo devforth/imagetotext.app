@@ -18,7 +18,7 @@ from tesserocr import PyTessBaseAPI, RIL, iterate_level, PSM, OEM
 folder = 'static/'
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class ImageModel(BaseModel):
     base64: str
@@ -32,11 +32,11 @@ class ImageModalResp(BaseModel):
     texts: List[ImageItemResp]
 
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
     
-@app.get("/about/")
+@app.get("/about/", response_class=HTMLResponse)
 def about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
 
