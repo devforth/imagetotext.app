@@ -46,7 +46,6 @@ def upload(request: ImageModel):
     buf = io.BytesIO(msg)
     image = Image.open(buf)
 
-
     with PyTessBaseAPI(oem=OEM.LSTM_ONLY) as api:
         api.SetImage(image)
         api.Recognize()
