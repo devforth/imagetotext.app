@@ -1,6 +1,7 @@
 
-Deployed application: [https://imagetotext.app/](https://imagetotext.app/)
+Deployed application: [imagetotext.app/](https://imagetotext.app/)
 
+Text extraction is based on hint: [How to extract text from image in Python](https://hinty.io/vserhiyev/how-to-extract-text-from-image-in-python/) If you have any questions, please ask in comments under hint.
 # How to self-host it
 
 This repo holds a `Dockerfile` with all needed (Correct version of Python and all dependencies which are managed via Pipenv).
@@ -19,6 +20,7 @@ services:
 ```
 
 Then you can use `http://<ip_of_server>:8314` or use any proxy server to route requests to port 8314, e.g. Nginx:
+
 
 
 ```
