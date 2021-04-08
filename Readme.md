@@ -88,7 +88,7 @@ pipenv run uvicorn main:app --reload
 
 # Testing and troubleshooting
 
-To fix any exception produced by python code use [http://fixexception.com/](fixexception) – works very well
+To fix any exception produced by python code use [fixexception.com](http://fixexception.com/) – works very well
 
 ```
 curl -d '{"base64":"baeldung"}' -H 'Content-Type: application/json' http://127.0.0.1:8000/upload/
