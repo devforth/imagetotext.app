@@ -33,3 +33,4 @@ steps:
     username: Drone
     template: >
       {{repo.name}}/{{build.branch}} - #{{build.number}} {{uppercasefirst build.status}} after {{since build.started}} (<{{build.link}}|Open>)
+      
