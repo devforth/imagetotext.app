@@ -4,7 +4,7 @@ services:
   fastapi:
     network_mode: host
     build: ../
-    command: /bin/bash -c "cd /code/ && pipenv run gunicorn main:app -k uvicorn.workers.UvicornWorker --workers 2 --bind 0.0.0.0:8314"
+    command: /bin/bash -c "cd /code/ && pipenv run gunicorn main:app -k uvicorn.workers.UvicornWorker --workers 1 --threads 2 --bind 0.0.0.0:8314"
     # working_dir: /root/
     restart: always
     
