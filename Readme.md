@@ -2,6 +2,7 @@
 Deployed application: [imagetotext.app/](https://imagetotext.app/)
 
 Text extraction is based on hint: [How to extract text from image in Python](https://hinty.io/vserhiyev/how-to-extract-text-from-image-in-python/) If you have any questions, please ask in comments under hint.
+
 # How to self-host it
 
 This repo holds a `Dockerfile` with all needed (Correct version of Python and all dependencies which are managed via Pipenv).
@@ -57,7 +58,6 @@ server {
 
 
 
-
 # Run dev autorelaod server locally
 
 Tested on Ubuntu 20.04 (Native and [WSL 2](https://hinty.io/ivictbor/simple-way-to-docker-on-windows-10-home-with-wsl-2/)):
@@ -87,6 +87,8 @@ pipenv run uvicorn main:app --reload
 ```
 
 # Testing and troubleshooting
+
+👷‍♂️ To fix any exception produced by python code use [fixexception.com](http://fixexception.com/) – works very well 💪
 
 ```
 curl -d '{"base64":"baeldung"}' -H 'Content-Type: application/json' http://127.0.0.1:8000/upload/
