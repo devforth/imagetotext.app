@@ -9,7 +9,6 @@
 > - 💼 If you have any kind of business cooperation with Russia, please block it now and keep most of money on your side, this is the only possible ethical decision
 > - ☢️ Ask your government to stop Russia from spreading invasion in any way. Russia is nuclear threat to the whole world. You think it is not possible? We thought that bombing of independent country with population of 44.13 million is also not possible.
 
-Deployed application: [imagetotext.app/](https://imagetotext.app/)
 
 Text extraction is based on hint: [How to extract text from image in Python](https://hinty.io/vserhiyev/how-to-extract-text-from-image-in-python/) If you have any questions, please ask in comments under hint.
 
