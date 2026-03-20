@@ -1,3 +1,4 @@
+[![Ask AI](http://tluma.ai/badge)](http://tluma.ai/ask-ai/devforth/imagetotext.app)
 
 > 🙏🙏🙏 Scream for help to Ukraine 🇺🇦
 > 
